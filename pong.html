@@ -10,6 +10,7 @@
     <canvas id="game-canvas" width="800" height="600"></canvas>
 
     <script type="text/javascript" charset="utf-8" async defer>
+        /* jshint esnext: true */
         const FPS = 60;
         const MS_PER_UPDATE = 1000 / FPS;
 
@@ -29,30 +30,32 @@
 
         var isPaused = false;
 
-        function Debugger() {
-            this.isEnabled = false;
-        }
-
-        Debugger.prototype.enable = function() {
-            this.isEnabled = true;
-        };
-
-        Debugger.prototype.disable = function() {
-            this.isEnabled = false;
-        };
-
-        Debugger.prototype.print = function(value, content) {
-            if (this.isEnabled) {
-                content = (typeof content !== 'undefined') ? content : false;
-
-                var res = value;
-                if (content) {
-                    res += ": " + content;
-                }
-
-                console.log(res);
+        class Debugger {
+            constructor() {
+                this.isEnabled = false;
             }
-        };
+
+            enable() {
+                this.isEnabled = true;
+            }
+
+            disable() {
+                this.isEnabled = false;
+            }
+
+            print(value, content) {
+                if (this.isEnabled) {
+                    content = (typeof content !== 'undefined') ? content : false;
+
+                    var res = value;
+                    if (content) {
+                        res += ": " + content;
+                    }
+
+                    console.log(res);
+                }
+            }
+        }
 
         var debug = new Debugger();
         debug.disable();
@@ -65,144 +68,143 @@
             return (randbound(0, 100) > 50) ? -1 : 1;
         }
 
-        function Coord(x, y) {
-            x = (typeof x !== 'undefined') ? x : 0;
-            y = (typeof y !== 'undefined') ? y : 0;
-
-            this.x = x;
-            this.y = y;
+        class Coord {
+            constructor(x = 0, y = 0) {
+                this.x = x;
+                this.y = y;
+            }
         }
 
-        function Player(name) {
-            this.name = name;
-            this.score = 0;
+        class Player {
+            constructor(name) {
+                this.name = name;
+                this._score = 0;
+            }
+
+            setScore(newScore) {
+                this._score = newScore;
+            }
+
+            getScore() {
+                return this._score.toString();
+            }
+
+            updateScore() {
+                ++this._score;
+            }
         }
-
-        Player.prototype.setScore = function(score) {
-            this.score = score;
-
-            return this;
-        };
-
-        Player.prototype.getScore = function() {
-            return this.score.toString();
-        };
-
-        Player.prototype.updateScore = function() {
-            ++this.score;
-
-            return this;
-        };
 
         // TODO: Consider defaulting both the speeds and the position
-        function Ball(color, radius, hSpeed, vSpeed, position) {
-            this.color = color;
-            this.radius = radius;
-            this.hSpeed = hSpeed;
-            this.vSpeed = vSpeed;
-            this.pos = position;
-        }
+        class Ball {
+            constructor(color, radius, hSpeed, vSpeed, position) {
+                this.color = color;
+                this.radius = radius;
+                this.hSpeed = hSpeed;
+                this.vSpeed = vSpeed;
+                this.pos = position;
+            }
 
-        Ball.prototype.restart = function() {
-            this.pos.x = canvas.hCenter;
-            this.pos.y = canvas.vCenter;
+            restart() {
+                this.pos.x = canvas.hCenter;
+                this.pos.y = canvas.vCenter;
 
-            this.hSpeed = randsign() * bhSpeed;
-            this.vSpeed = randbound(-10, 10);
-        };
-
-        function Racket(color, width, height, position, speed) {
-            speed = (typeof speed !== 'undefined') ? speed : 20;
-
-            this.color = color;
-            this.width = width;
-            this.height = height;
-            this.pos = position;
-            this.speed = speed;
-        }
-
-        Racket.prototype.center = function() {
-            return {
-                x: this.pos.x + (this.width / 2),
-                y: this.pos.y + (this.height / 2)
-            };
-        };
-
-        Racket.prototype.moveToRelative = function(relativePosition) {
-            this.pos.y = relativePosition - (this.height / 2);
-
-            return this;
-        };
-
-        Racket.prototype.moveToOrig = function() {
-            this.moveToRelative(canvas.vCenter);
-
-            return this;
-        };
-
-        function Button(width, height, borderWidth, position) {
-            this.width = width;
-            this.height = height;
-            this.borderWidth = borderWidth;
-            this.pos = position;
-
-            this.clicked = false;
-        }
-
-        Button.prototype.click = function() {
-            this.clicked = !this.clicked;
-        };
-
-        function Effects() {
-            this.effectsNames = ['lost', 'ball_bounce', 'game_paused'];
-
-            this.effects = [];
-            for (var i = 0; i < this.effectsNames.length; ++i) {
-                this.effects[this.effectsNames[i]] =
-                    new Audio(effectsRoot + '/' + this.effectsNames[i] + '.ogg');
+                this.hSpeed = randsign() * bhSpeed;
+                this.vSpeed = randbound(-10, 10);
             }
         }
 
-        Effects.prototype.muteAll = function() {
-            for (var i = 0; i < this.effectsNames.length; ++i) {
-                this.effects[this.effectsNames[i]].muted = true;
+        class Racket {
+            constructor(color, width, height, position, speed = 20) {
+                this.color = color;
+                this.width = width;
+                this.height = height;
+                this.pos = position;
+                this.speed = speed;
             }
-        };
 
-        Effects.prototype.unmuteAll = function() {
-            for (var i = 0; i < this.effectsNames.length; ++i) {
-                this.effects[this.effectsNames[i]].muted = false;
+            center() {
+                return {
+                    x: this.pos.x + (this.width / 2),
+                    y: this.pos.y + (this.height / 2)
+                };
             }
-        };
 
-        Effects.prototype.toggleMuteAll = function() {
-            for (var i = 0; i < this.effectsNames.length; ++i) {
-                this.effects[this.effectsNames[i]].muted =
-                    !this.effects[this.effectsNames[i]].muted;
+            moveToRelative(relativePosition) {
+                this.pos.y = relativePosition - (this.height / 2);
             }
-        };
+
+            moveToOrig() {
+                this.moveToRelative(canvas.vCenter);
+            }
+        }
+
+        class Button {
+            constructor(width, height, borderWidth, position) {
+                this.width = width;
+                this.height = height;
+                this.borderWidth = borderWidth;
+                this.pos = position;
+
+                this.clicked = false;
+            }
+
+            click() {
+                this.clicked = !this.clicked;
+            }
+        }
+
+        class Effects {
+            constructor() {
+                this.effectsNames = ['lost', 'ball_bounce', 'game_paused'];
+
+                this.effects = [];
+                for (var i = 0; i < this.effectsNames.length; ++i) {
+                    this.effects[this.effectsNames[i]] =
+                        new Audio(effectsRoot + '/' + this.effectsNames[i] + '.ogg');
+                }
+            }
+
+            muteAll() {
+                for (var i = 0; i < this.effectsNames.length; ++i) {
+                    this.effects[this.effectsNames[i]].muted = true;
+                }
+            }
+
+            unmuteAll() {
+                for (var i = 0; i < this.effectsNames.length; ++i) {
+                    this.effects[this.effectsNames[i]].muted = false;
+                }
+            }
+
+            toggleMuteAll() {
+                for (var i = 0; i < this.effectsNames.length; ++i) {
+                    this.effects[this.effectsNames[i]].muted =
+                        !this.effects[this.effectsNames[i]].muted;
+                }
+            }
+        }
 
         var audioEffects = new Effects();
 
-        function Text(color, text, fontSize, fontFamily, position, fill) {
-            fill = (typeof fill !== 'undefined') ? fill : true;
+        class Text {
+            constructor(color, text, fontSize, fontFamily, position, fill = true) {
+                this.color = color;
+                this.text = text;
+                this.fontSize = fontSize;
+                this.fontFamily = fontFamily;
+                this.width = this.width_helper();
+                this.height = fontSize;
+                this.pos = position;
+                this.fill = fill;
+            }
 
-            this.color = color;
-            this.text = text;
-            this.fontSize = fontSize;
-            this.fontFamily = fontFamily;
-            this.width = this.width_helper();
-            this.height = fontSize;
-            this.pos = position;
-            this.fill = fill;
+            width_helper() {
+                canvasContext.textBaseline = 'top';
+                canvasContext.font = this.fontSize + "px " + this.fontFamily;
+
+                return canvasContext.measureText(this.text).width;
+            }
         }
-
-        Text.prototype.width_helper = function() {
-            canvasContext.textBaseline = 'top';
-            canvasContext.font = this.fontSize + "px " + this.fontFamily;
-
-            return canvasContext.measureText(this.text).width;
-        };
 
         CanvasRenderingContext2D.prototype.drawRect = function(
           color, width, height, xOffset, yOffset, fill, lineWidth) {
