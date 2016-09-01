@@ -114,7 +114,7 @@ function render() {
         canvasContext.drawFillRect('white', soundButton.width, soundButton.height, soundButton.pos.x, soundButton.pos.y);
     }
 
-    // Display splashscreen and nothing else.
+    // Display splash screen and nothing else.
     if (isSplashScreen) {
         splashScreen();
 
@@ -154,8 +154,8 @@ function update() {
     if (isPaused) return;
     if (isLoseScreen) return;
 
-    ball.pos.x = ball.pos.x + ball.hSpeed;
-    ball.pos.y = ball.pos.y + ball.vSpeed;
+    ball.pos.x += ball.hSpeed;
+    ball.pos.y += ball.vSpeed;
 
     // AI for the enemy racket.
     if (ball.pos.x < canvas.hCenter) {
