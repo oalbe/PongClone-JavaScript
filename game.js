@@ -54,6 +54,18 @@ function randsign() {
     return (randbound(0, 100) > 50) ? -1 : 1;
 }
 
+function getMousePosition(event) {
+    var rect = canvas.getBoundingClientRect();
+    var rootElement = document.documentElement;
+    var xMousePos = event.clientX - rect.left - rootElement.scrollLeft;
+    var yMousePos = event.clientY - rect.top - rootElement.scrollTop;
+
+    return {
+        x: xMousePos,
+        y: yMousePos
+    };
+}
+
 class Coord {
     constructor(x = 0, y = 0) {
         this.x = x;
@@ -279,18 +291,6 @@ var pauseText = new Text("white", "PAUSE", 194, "sans-serif", new Coord());
 pauseText.pos.x = canvas.hCenter - (pauseText.width / 2);
 pauseText.pos.y = canvas.vCenter - (pauseText.fontSize / 2);
 
-function getMousePosition(event) {
-    var rect = canvas.getBoundingClientRect();
-    var rootElement = document.documentElement;
-    var xMousePos = event.clientX - rect.left - rootElement.scrollLeft;
-    var yMousePos = event.clientY - rect.top - rootElement.scrollTop;
-
-    return {
-        x: xMousePos,
-        y: yMousePos
-    };
-}
-
 var splashScreenTitle = new Text('white', 'PONG', 220, 'Dimitri, sans-serif', new Coord());
 splashScreenTitle.pos.x = canvas.hCenter - (splashScreenTitle.width / 2);
 splashScreenTitle.pos.y = (canvas.vCenter - (splashScreenTitle.fontSize / 2)) * 0.4;
@@ -299,7 +299,7 @@ var splashScreenBlink = new Text('white', 'Press SPACE to start', 30, 'Dimitri, 
 splashScreenBlink.pos.x = canvas.hCenter - (splashScreenBlink.width / 2);
 splashScreenBlink.pos.y = (canvas.vCenter * 1.3) - (splashScreenBlink.fontSize / 2);
 
-var isMenuOpen = true;
+var isSplashScreen = true;
 
 function splashScreen() {
     canvasContext.drawRect('black', canvas.width, canvas.height, 0, 0);
@@ -323,7 +323,7 @@ function render() {
 
     canvasContext.drawRect('white', soundButton.width, soundButton.height, soundButton.pos.x, soundButton.pos.y, buttonForm);
 
-    if (isMenuOpen) {
+    if (isSplashScreen) {
         splashScreen();
     } else {
         if (isPaused) {
@@ -345,203 +345,204 @@ function render() {
 }
 
 function update() {
-    if (!isMenuOpen) {
-        if (isPaused) {
-            return;
-        }
-
-        ball.pos.x = ball.pos.x + ball.hSpeed;
-        ball.pos.y = ball.pos.y + ball.vSpeed;
-
-        // AI for the enemy racket.
-        if (ball.pos.x < canvas.hCenter) {
-            if (racketRight.center().y < canvas.vCenter) {
-                if (((canvas.height / 2) - racketRight.center().y) > racketRight.speed) {
-                    racketRight.pos.y += racketRight.speed;
-                } else {
-                    racketRight.moveToOrig();
-                }
-            } else if (racketRight.center().y > canvas.vCenter) {
-                if ((racketRight.center().y - canvas.vCenter) > racketRight.speed) {
-                    racketRight.pos.y -= racketRight.speed;
-                } else {
-                    racketRight.moveToOrig();
-                }
-            }
-        } else if (ball.pos.x >= canvas.hCenter) {
-            if (racketRight.center().y < ball.pos.y) {
-                if ((ball.pos.y - racketRight.center().y) > racketRight.speed) {
-                    racketRight.pos.y += racketRight.speed;
-                } else {
-                    racketRight.moveToRelative(ball.pos.y);
-                }
-            } else if (racketRight.center().y > ball.pos.y) {
-                if ((racketRight.center().y - ball.pos.y) > racketRight.speed) {
-                    racketRight.pos.y -= racketRight.speed;
-                } else {
-                    racketRight.moveToRelative(ball.pos.y);
-                }
-            }
-        }
-
-        // ***
-        // Rackets collisions
-        // ***
-        // * Left racket
-        // Racket top boundary
-        if (racketLeft.pos.y <= 0) {
-            racketLeft.pos.y = 5;
-        }
-
-        // Racket bottom boundary
-        if (racketLeft.pos.y >= (canvas.height - racketLeft.height)) {
-            racketLeft.pos.y = canvas.height - racketLeft.height - 5;
-        }
-
-        //* Right racket
-        // Racket top boundary
-        if (racketRight.pos.y <= 0) {
-            racketRight.pos.y = 5;
-        }
-
-        // Racket bottom boundary
-        if (racketRight.pos.y >= (canvas.height - racketRight.height)) {
-            racketRight.pos.y = canvas.height - racketRight.height - 5;
-        }
-
-        // ***
-        // Ball collisions
-        // ***
-        // Left boundary
-        if ((ball.pos.x) < 0) {
-            // It hit the player "goal". Reset it to the center.
-            playerRight.updateScore();
-
-            audioEffects.effects.lost.play();
-
-            ball.restart();
-        }
-
-        // Right boundary
-        if ((ball.pos.x + ball.radius) >= canvas.width) {
-            // It hit the AI "goal". Reset it to the center.
-            playerLeft.updateScore();
-
-            audioEffects.effects.lost.play();
-
-            ball.restart();
-        }
-
-        // Top boundary
-        if ((ball.pos.y - ball.radius) <= 0) {
-            audioEffects.effects.ball_bounce.play();
-
-            ball.vSpeed = -ball.vSpeed;
-        }
-
-        // Bottom boundary
-        if ((ball.pos.y + ball.radius) >= canvas.height) {
-            audioEffects.effects.ball_bounce.play();
-
-            ball.vSpeed = -ball.vSpeed;
-        }
-
-        // TODO: Tune this.
-        var bvSpeed = -5;
-
-        // Position of the ball relative to the racketLeft.
-        var ballPosRelative = bvSpeed + (ball.pos.y - (racketLeft.pos.y + racketLeft.height));
-
-        //* Hit the left racket
-        // Hit the vertical edge
-        if ((ball.pos.x - ball.radius) <= (racketLeft.width + XXXoffset)) {
-            audioEffects.effects.ball_bounce.play();
-
-            // Check if it hit the uppermost quarter
-            if ((ball.pos.y >= racketLeft.pos.y) &&
-                (ball.pos.y <= (racketLeft.pos.y + (racketLeft.height / 4)))) {
-                debug.print("RacketLeft: COLLISION UPPER FIRST!");
-                ball.hSpeed = -ball.hSpeed;
-
-                ball.vSpeed = ballPosRelative * 0.33;
-            }
-
-            // Check if it hit the upper middle quarter
-            if ((ball.pos.y > (racketLeft.pos.y + (racketLeft.height / 4))) &&
-                (ball.pos.y <= (racketLeft.pos.y + (racketLeft.height / 2)))) {
-                debug.print("RacketLeft: COLLISION UPPER MIDDLE!");
-                ball.hSpeed = -ball.hSpeed;
-                ball.vSpeed = ballPosRelative * 0.16;
-            }
-
-            // Check if it hit the lower middle quarter
-            if ((ball.pos.y > (racketLeft.pos.y + (racketLeft.height / 2)) &&
-                (ball.pos.y <= (racketLeft.pos.y + ((racketLeft.height / 4) * 3))))) {
-                debug.print("RacketLeft: COLLISION LOWER MIDDLE!");
-                ball.hSpeed = -ball.hSpeed;
-                ball.vSpeed = -ballPosRelative * 0.16;
-            }
-
-            // Check if it hit the lowermost quarter
-            if ((ball.pos.y > (racketLeft.pos.y + ((racketLeft.height / 4) * 3)) &&
-                (ball.pos.y <= (racketLeft.pos.y + racketLeft.height)))) {
-                debug.print("RacketLeft: COLLISION LOWER FIRST!");
-                ball.hSpeed = -ball.hSpeed;
-                ball.vSpeed = -ballPosRelative * 0.33;
-            }
-        }
-
-        // Hit the horizontal lower edge
-        // if ((ball.pos.y - ball.radius) <= (racketLeft.pos.y + racketLeft.height)) {
-        //     if ((ball.pos.x + ball.radius) <= 20) {
-        //         console.log("COLLISION LOWER SIDE!");
-        //         // ball.vSpeed = -ball.vSpeed;
-        //     }
-        // }
-
-        //* Hit the right racket
-        // Hit the vertical edge
-        if ((ball.pos.x + ball.radius) >= (canvas.width -(racketRight.width + XXXoffset))) {
-            audioEffects.effects.ball_bounce.play();
-
-            // Check if it hit the uppermost quarter
-            if ((ball.pos.y >= racketRight.pos.y) &&
-                (ball.pos.y <= (racketRight.pos.y + (racketRight.height / 4)))) {
-                debug.print("RacketRight: COLLISION UPPER FIRST!");
-                ball.hSpeed = -ball.hSpeed;
-            }
-
-            // Check if it hit the upper middle quarter
-            if ((ball.pos.y > (racketRight.pos.y + (racketRight.height / 4))) &&
-                (ball.pos.y <= (racketRight.pos.y + (racketRight.height / 2)))) {
-                debug.print("RacketRight: COLLISION UPPER MIDDLE!");
-                ball.hSpeed = -ball.hSpeed;
-            }
-
-            // Check if it hit the lower middle quarter
-            if ((ball.pos.y > (racketRight.pos.y + (racketRight.height / 2)) &&
-                (ball.pos.y <= (racketRight.pos.y + ((racketRight.height / 4) * 3))))) {
-                debug.print("RacketRight: COLLISION LOWER MIDDLE!");
-                ball.hSpeed = -ball.hSpeed;
-            }
-
-            // Check if it hit the lowermost quarter
-            if ((ball.pos.y > (racketRight.pos.y + ((racketRight.height / 4) * 3)) &&
-                (ball.pos.y <= (racketRight.pos.y + racketRight.height)))) {
-                debug.print("RacketRight: COLLISION LOWER FIRST!");
-                ball.hSpeed = -ball.hSpeed;
-            }
-        }
-
-        // Hit the horizontal lower edge
-        // if ((ball.pos.y - ball.radius) < (racketRight.pos.y + racketRight.height)) {
-        //     if ((ball.pos.x + ball.radius) <= 20) {
-        //         console.log("COLLISION LOWER SIDE!");
-        //         // ball.hSpeed = ball.hSpeed / 2;
-        //         ball.vSpeed = -ball.vSpeed;
-        //     }
-        // }
+    if (isSplashScreen) {
+        return;
     }
+    if (isPaused) {
+        return;
+    }
+
+    ball.pos.x = ball.pos.x + ball.hSpeed;
+    ball.pos.y = ball.pos.y + ball.vSpeed;
+
+    // AI for the enemy racket.
+    if (ball.pos.x < canvas.hCenter) {
+        if (racketRight.center().y < canvas.vCenter) {
+            if (((canvas.height / 2) - racketRight.center().y) > racketRight.speed) {
+                racketRight.pos.y += racketRight.speed;
+            } else {
+                racketRight.moveToOrig();
+            }
+        } else if (racketRight.center().y > canvas.vCenter) {
+            if ((racketRight.center().y - canvas.vCenter) > racketRight.speed) {
+                racketRight.pos.y -= racketRight.speed;
+            } else {
+                racketRight.moveToOrig();
+            }
+        }
+    } else if (ball.pos.x >= canvas.hCenter) {
+        if (racketRight.center().y < ball.pos.y) {
+            if ((ball.pos.y - racketRight.center().y) > racketRight.speed) {
+                racketRight.pos.y += racketRight.speed;
+            } else {
+                racketRight.moveToRelative(ball.pos.y);
+            }
+        } else if (racketRight.center().y > ball.pos.y) {
+            if ((racketRight.center().y - ball.pos.y) > racketRight.speed) {
+                racketRight.pos.y -= racketRight.speed;
+            } else {
+                racketRight.moveToRelative(ball.pos.y);
+            }
+        }
+    }
+
+    // ***
+    // Rackets collisions
+    // ***
+    // * Left racket
+    // Racket top boundary
+    if (racketLeft.pos.y <= 0) {
+        racketLeft.pos.y = 5;
+    }
+
+    // Racket bottom boundary
+    if (racketLeft.pos.y >= (canvas.height - racketLeft.height)) {
+        racketLeft.pos.y = canvas.height - racketLeft.height - 5;
+    }
+
+    //* Right racket
+    // Racket top boundary
+    if (racketRight.pos.y <= 0) {
+        racketRight.pos.y = 5;
+    }
+
+    // Racket bottom boundary
+    if (racketRight.pos.y >= (canvas.height - racketRight.height)) {
+        racketRight.pos.y = canvas.height - racketRight.height - 5;
+    }
+
+    // ***
+    // Ball collisions
+    // ***
+    // Left boundary
+    if ((ball.pos.x) < 0) {
+        // It hit the player "goal". Reset it to the center.
+        playerRight.updateScore();
+
+        audioEffects.effects.lost.play();
+
+        ball.restart();
+    }
+
+    // Right boundary
+    if ((ball.pos.x + ball.radius) >= canvas.width) {
+        // It hit the AI "goal". Reset it to the center.
+        playerLeft.updateScore();
+
+        audioEffects.effects.lost.play();
+
+        ball.restart();
+    }
+
+    // Top boundary
+    if ((ball.pos.y - ball.radius) <= 0) {
+        audioEffects.effects.ball_bounce.play();
+
+        ball.vSpeed = -ball.vSpeed;
+    }
+
+    // Bottom boundary
+    if ((ball.pos.y + ball.radius) >= canvas.height) {
+        audioEffects.effects.ball_bounce.play();
+
+        ball.vSpeed = -ball.vSpeed;
+    }
+
+    // TODO: Tune this.
+    var bvSpeed = -5;
+
+    // Position of the ball relative to the racketLeft.
+    var ballPosRelative = bvSpeed + (ball.pos.y - (racketLeft.pos.y + racketLeft.height));
+
+    //* Hit the left racket
+    // Hit the vertical edge
+    if ((ball.pos.x - ball.radius) <= (racketLeft.width + XXXoffset)) {
+        audioEffects.effects.ball_bounce.play();
+
+        // Check if it hit the uppermost quarter
+        if ((ball.pos.y >= racketLeft.pos.y) &&
+            (ball.pos.y <= (racketLeft.pos.y + (racketLeft.height / 4)))) {
+            debug.print("RacketLeft: COLLISION UPPER FIRST!");
+            ball.hSpeed = -ball.hSpeed;
+
+            ball.vSpeed = ballPosRelative * 0.33;
+        }
+
+        // Check if it hit the upper middle quarter
+        if ((ball.pos.y > (racketLeft.pos.y + (racketLeft.height / 4))) &&
+            (ball.pos.y <= (racketLeft.pos.y + (racketLeft.height / 2)))) {
+            debug.print("RacketLeft: COLLISION UPPER MIDDLE!");
+            ball.hSpeed = -ball.hSpeed;
+            ball.vSpeed = ballPosRelative * 0.16;
+        }
+
+        // Check if it hit the lower middle quarter
+        if ((ball.pos.y > (racketLeft.pos.y + (racketLeft.height / 2)) &&
+            (ball.pos.y <= (racketLeft.pos.y + ((racketLeft.height / 4) * 3))))) {
+            debug.print("RacketLeft: COLLISION LOWER MIDDLE!");
+            ball.hSpeed = -ball.hSpeed;
+            ball.vSpeed = -ballPosRelative * 0.16;
+        }
+
+        // Check if it hit the lowermost quarter
+        if ((ball.pos.y > (racketLeft.pos.y + ((racketLeft.height / 4) * 3)) &&
+            (ball.pos.y <= (racketLeft.pos.y + racketLeft.height)))) {
+            debug.print("RacketLeft: COLLISION LOWER FIRST!");
+            ball.hSpeed = -ball.hSpeed;
+            ball.vSpeed = -ballPosRelative * 0.33;
+        }
+    }
+
+    // Hit the horizontal lower edge
+    // if ((ball.pos.y - ball.radius) <= (racketLeft.pos.y + racketLeft.height)) {
+    //     if ((ball.pos.x + ball.radius) <= 20) {
+    //         console.log("COLLISION LOWER SIDE!");
+    //         // ball.vSpeed = -ball.vSpeed;
+    //     }
+    // }
+
+    //* Hit the right racket
+    // Hit the vertical edge
+    if ((ball.pos.x + ball.radius) >= (canvas.width -(racketRight.width + XXXoffset))) {
+        audioEffects.effects.ball_bounce.play();
+
+        // Check if it hit the uppermost quarter
+        if ((ball.pos.y >= racketRight.pos.y) &&
+            (ball.pos.y <= (racketRight.pos.y + (racketRight.height / 4)))) {
+            debug.print("RacketRight: COLLISION UPPER FIRST!");
+            ball.hSpeed = -ball.hSpeed;
+        }
+
+        // Check if it hit the upper middle quarter
+        if ((ball.pos.y > (racketRight.pos.y + (racketRight.height / 4))) &&
+            (ball.pos.y <= (racketRight.pos.y + (racketRight.height / 2)))) {
+            debug.print("RacketRight: COLLISION UPPER MIDDLE!");
+            ball.hSpeed = -ball.hSpeed;
+        }
+
+        // Check if it hit the lower middle quarter
+        if ((ball.pos.y > (racketRight.pos.y + (racketRight.height / 2)) &&
+            (ball.pos.y <= (racketRight.pos.y + ((racketRight.height / 4) * 3))))) {
+            debug.print("RacketRight: COLLISION LOWER MIDDLE!");
+            ball.hSpeed = -ball.hSpeed;
+        }
+
+        // Check if it hit the lowermost quarter
+        if ((ball.pos.y > (racketRight.pos.y + ((racketRight.height / 4) * 3)) &&
+            (ball.pos.y <= (racketRight.pos.y + racketRight.height)))) {
+            debug.print("RacketRight: COLLISION LOWER FIRST!");
+            ball.hSpeed = -ball.hSpeed;
+        }
+    }
+
+    // Hit the horizontal lower edge
+    // if ((ball.pos.y - ball.radius) < (racketRight.pos.y + racketRight.height)) {
+    //     if ((ball.pos.x + ball.radius) <= 20) {
+    //         console.log("COLLISION LOWER SIDE!");
+    //         // ball.hSpeed = ball.hSpeed / 2;
+    //         ball.vSpeed = -ball.vSpeed;
+    //     }
+    // }
 } // /update()
 
 function game() {
@@ -604,8 +605,8 @@ function game() {
 
         // Space pressed
         if (event.key === " ") {
-            if (isMenuOpen) {
-                isMenuOpen = false;
+            if (isSplashScreen) {
+                isSplashScreen = false;
                 console.log('SPACE PRESSED');
             }
         }
