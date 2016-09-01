@@ -1,8 +1,5 @@
-/* jshint esnext: true */
 const FPS = 60;
 const MS_PER_UPDATE = 1000 / FPS;
-
-const effectsRoot = 'sounds';
 
 var canvas = document.getElementById('game-canvas');
 var canvasContext = canvas.getContext('2d');
@@ -55,17 +52,13 @@ var winScreenTitle = new Text('white', 'You won!', 180, 'Dimitri, sans-serif', n
 winScreenTitle.pos.x = canvas.hCenter - (winScreenTitle.width / 2);
 winScreenTitle.pos.y = canvas.vCenter - (winScreenTitle.fontSize / 2);
 
-var winScreenBlink = new Text('white', 'Press SPACE to restart', 30, 'Dimitri, sans-serif', new Coord());
-winScreenBlink.pos.x = canvas.hCenter - (winScreenBlink.width / 2);
-winScreenBlink.pos.y = (canvas.vCenter * 1.3) - (winScreenBlink.fontSize / 2);
-
 var loseScreenTitle = new Text('white', 'You lost', 180, 'Dimitri, sans-serif', new Coord());
 loseScreenTitle.pos.x = canvas.hCenter - (loseScreenTitle.width / 2);
 loseScreenTitle.pos.y = canvas.vCenter - (loseScreenTitle.fontSize / 2);
 
-var loseScreenBlink = new Text('white', 'Press SPACE to restart', 30, 'Dimitri, sans-serif', new Coord());
-loseScreenBlink.pos.x = canvas.hCenter - (loseScreenBlink.width / 2);
-loseScreenBlink.pos.y = (canvas.vCenter * 1.3) - (loseScreenBlink.fontSize / 2);
+var loseWinScreenBlink = new Text('white', 'Press SPACE to restart', 30, 'Dimitri, sans-serif', new Coord());
+loseWinScreenBlink.pos.x = canvas.hCenter - (loseWinScreenBlink.width / 2);
+loseWinScreenBlink.pos.y = (canvas.vCenter * 1.3) - (loseWinScreenBlink.fontSize / 2);
 
 var isSplashScreen = true;
 
@@ -89,7 +82,7 @@ function winScreen() {
     var blinking = true;
     var freq = 1000;
     if (!blinking || Math.floor(Date.now() / freq) % 2) {
-        canvasContext.drawFillText(winScreenBlink.color, winScreenBlink.text, winScreenBlink.fontSize, winScreenBlink.fontFamily, winScreenBlink.pos.x, winScreenBlink.pos.y);
+        canvasContext.drawFillText(loseWinScreenBlink.color, loseWinScreenBlink.text, loseWinScreenBlink.fontSize, loseWinScreenBlink.fontFamily, loseWinScreenBlink.pos.x, loseWinScreenBlink.pos.y);
     }
 }
 
@@ -101,7 +94,7 @@ function loseScreen() {
     var blinking = true;
     var freq = 1000;
     if (!blinking || Math.floor(Date.now() / freq) % 2) {
-        canvasContext.drawFillText(loseScreenBlink.color, loseScreenBlink.text, loseScreenBlink.fontSize, loseScreenBlink.fontFamily, loseScreenBlink.pos.x, loseScreenBlink.pos.y);
+        canvasContext.drawFillText(loseWinScreenBlink.color, loseWinScreenBlink.text, loseWinScreenBlink.fontSize, loseWinScreenBlink.fontFamily, loseWinScreenBlink.pos.x, loseWinScreenBlink.pos.y);
     }
 }
 
