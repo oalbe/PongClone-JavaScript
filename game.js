@@ -51,6 +51,14 @@ var splashScreenBlink = new Text('white', 'Press SPACE to start', 30, 'Dimitri, 
 splashScreenBlink.pos.x = canvas.hCenter - (splashScreenBlink.width / 2);
 splashScreenBlink.pos.y = (canvas.vCenter * 1.3) - (splashScreenBlink.fontSize / 2);
 
+var winScreenTitle = new Text('white', 'You won!', 180, 'Dimitri, sans-serif', new Coord());
+winScreenTitle.pos.x = canvas.hCenter - (winScreenTitle.width / 2);
+winScreenTitle.pos.y = canvas.vCenter - (winScreenTitle.fontSize / 2);
+
+var winScreenBlink = new Text('white', 'Press SPACE to restart', 30, 'Dimitri, sans-serif', new Coord());
+winScreenBlink.pos.x = canvas.hCenter - (winScreenBlink.width / 2);
+winScreenBlink.pos.y = (canvas.vCenter * 1.3) - (winScreenBlink.fontSize / 2);
+
 var isSplashScreen = true;
 
 function splashScreen() {
@@ -62,6 +70,18 @@ function splashScreen() {
     var freq = 1000;
     if (!blinking || Math.floor(Date.now() / freq) % 2) {
         canvasContext.drawFillText(splashScreenBlink.color, splashScreenBlink.text, splashScreenBlink.fontSize, splashScreenBlink.fontFamily, splashScreenBlink.pos.x, splashScreenBlink.pos.y);
+    }
+}
+
+function winScreen() {
+    canvasContext.drawFillRect('black', canvas.width, canvas.height, 0, 0);
+
+    canvasContext.drawFillText(winScreenTitle.color, winScreenTitle.text, winScreenTitle.fontSize, winScreenTitle.fontFamily, winScreenTitle.pos.x, winScreenTitle.pos.y);
+
+    var blinking = true;
+    var freq = 1000;
+    if (!blinking || Math.floor(Date.now() / freq) % 2) {
+        canvasContext.drawFillText(winScreenBlink.color, winScreenBlink.text, winScreenBlink.fontSize, winScreenBlink.fontFamily, winScreenBlink.pos.x, winScreenBlink.pos.y);
     }
 }
 
