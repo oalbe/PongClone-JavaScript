@@ -238,18 +238,25 @@ CanvasRenderingContext2D.prototype.drawCirc = function(color, radius, xCenter, y
     return this;
 };
 
-CanvasRenderingContext2D.prototype.drawText = function(
-  color, text, fontSize, fontFamily, xOffset, yOffset, fill = true) {
+CanvasRenderingContext2D.prototype.drawFillText = function(
+  color, text, fontSize, fontFamily, xOffset, yOffset) {
     this.textBaseline = 'top';
     this.font = fontSize + "px " + fontFamily;
 
-    if (fill) {
-        this.fillStyle = color;
-        this.fillText(text, xOffset, yOffset);
-    } else {
-        this.strokeStyle = color;
-        this.strokeText(text, xOffset, yOffset);
-    }
+    this.fillStyle = color;
+    this.fillText(text, xOffset, yOffset);
+
+    return this;
+};
+
+CanvasRenderingContext2D.prototype.drawStrokeText = function(
+  color, text, fontSize, fontFamily, xOffset, yOffset) {
+    this.textBaseline = 'top';
+    this.font = fontSize + "px " + fontFamily;
+
+    this.strokeStyle = color;
+    this.strokeText(text, xOffset, yOffset);
+
 
     return this;
 };
@@ -300,12 +307,12 @@ var isSplashScreen = true;
 function splashScreen() {
     canvasContext.drawRect('black', canvas.width, canvas.height, 0, 0);
 
-    canvasContext.drawText(splashScreenTitle.color, splashScreenTitle.text, splashScreenTitle.fontSize, splashScreenTitle.fontFamily, splashScreenTitle.pos.x, splashScreenTitle.pos.y);
+    canvasContext.drawFillText(splashScreenTitle.color, splashScreenTitle.text, splashScreenTitle.fontSize, splashScreenTitle.fontFamily, splashScreenTitle.pos.x, splashScreenTitle.pos.y);
 
     var blinking = true;
     var freq = 1000;
     if (!blinking || Math.floor(Date.now() / freq) % 2) {
-        canvasContext.drawText(splashScreenBlink.color, splashScreenBlink.text, splashScreenBlink.fontSize, splashScreenBlink.fontFamily, splashScreenBlink.pos.x, splashScreenBlink.pos.y);
+        canvasContext.drawFillText(splashScreenBlink.color, splashScreenBlink.text, splashScreenBlink.fontSize, splashScreenBlink.fontFamily, splashScreenBlink.pos.x, splashScreenBlink.pos.y);
     }
 }
 
@@ -327,15 +334,15 @@ function render() {
     }
 
     if (isPaused) {
-        canvasContext.drawText(
+        canvasContext.drawFillText(
             pauseText.color, pauseText.text, pauseText.fontSize, pauseText.fontFamily,
             pauseText.pos.x, pauseText.pos.y);
 
         // return; // A return here would make everything else disappear when the game is paused.
     }
 
-    canvasContext.drawText("white", playerLeft.getScore(), 24, "sans-serif", canvas.width / 4, 50);
-    canvasContext.drawText("white", playerRight.getScore(), 24, "sans-serif", canvas.width - (canvas.width / 4), 50);
+    canvasContext.drawFillText("white", playerLeft.getScore(), 24, "sans-serif", canvas.width / 4, 50);
+    canvasContext.drawFillText("white", playerRight.getScore(), 24, "sans-serif", canvas.width - (canvas.width / 4), 50);
 
     canvasContext.drawLine('white', 4, [40, 40], new Coord(canvas.width / 2, 0), new Coord(canvas.width / 2, canvas.height), 0);
 
