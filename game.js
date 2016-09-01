@@ -1,19 +1,19 @@
 const FPS = 60;
 const MS_PER_UPDATE = 1000 / FPS;
 
-var canvas = document.getElementById('game-canvas');
-var canvasContext = canvas.getContext('2d');
+let canvas = document.getElementById('game-canvas');
+let canvasContext = canvas.getContext('2d');
 
 canvas.hCenter = canvas.width / 2;
 canvas.vCenter = canvas.height / 2;
 
-var previous = Date.now();
-var lag = 0;
+let previous = Date.now();
+let lag = 0;
 
-var XXXoffset = 5;
-var bhSpeed = 8;
+let XXXoffset = 5;
+let bhSpeed = 8;
 
-var debug = new Debugger();
+let debug = new Debugger();
 debug.disable();
 
 class Coord {
@@ -23,53 +23,53 @@ class Coord {
     }
 }
 
-var audioEffects = new Effects();
+let audioEffects = new Effects();
 
-var playerLeft = new Player("PlayerName");
-var playerRight = new Player("AI");
+let playerLeft = new Player("PlayerName");
+let playerRight = new Player("AI");
 
-var ball = new Ball('white', 10, randsign() * bhSpeed, randbound(-10, 10), new Coord(canvas.hCenter, canvas.vCenter));
-var racketLeft = new Racket('white', 15, 100, new Coord(5, 50));
-var racketRight = new Racket('white', 15, 100, new Coord(canvas.width - 20, 50));
+let ball = new Ball('white', 10, randsign() * bhSpeed, randbound(-10, 10), new Coord(canvas.hCenter, canvas.vCenter));
+let racketLeft = new Racket('white', 15, 100, new Coord(5, 50));
+let racketRight = new Racket('white', 15, 100, new Coord(canvas.width - 20, 50));
 
-var soundButton = new Button(20, 20, 2, new Coord(canvas.width - 20 - 50, 10));
+let soundButton = new Button(20, 20, 2, new Coord(canvas.width - 20 - 50, 10));
 
-var pauseText = new Text("white", "PAUSE", 194, "sans-serif", new Coord());
+let pauseText = new Text("white", "PAUSE", 194, "Dimitri, sans-serif", new Coord());
 pauseText.pos.x = canvas.hCenter - (pauseText.width / 2);
 pauseText.pos.y = canvas.vCenter - (pauseText.fontSize / 2);
 
-var splashScreenTitle = new Text('white', 'PONG', 220, 'Dimitri, sans-serif', new Coord());
+let splashScreenTitle = new Text('white', 'PONG', 220, 'Dimitri, sans-serif', new Coord());
 splashScreenTitle.pos.x = canvas.hCenter - (splashScreenTitle.width / 2);
 splashScreenTitle.pos.y = (canvas.vCenter - (splashScreenTitle.fontSize / 2)) * 0.4;
 
-var splashScreenBlink = new Text('white', 'Press SPACE to start', 30, 'Dimitri, sans-serif', new Coord());
+let splashScreenBlink = new Text('white', 'Press SPACE to start', 30, 'Dimitri, sans-serif', new Coord());
 splashScreenBlink.pos.x = canvas.hCenter - (splashScreenBlink.width / 2);
 splashScreenBlink.pos.y = (canvas.vCenter * 1.3) - (splashScreenBlink.fontSize / 2);
 
-var winScreenTitle = new Text('white', 'You won!', 180, 'Dimitri, sans-serif', new Coord());
+let winScreenTitle = new Text('white', 'You won!', 180, 'Dimitri, sans-serif', new Coord());
 winScreenTitle.pos.x = canvas.hCenter - (winScreenTitle.width / 2);
 winScreenTitle.pos.y = canvas.vCenter - (winScreenTitle.fontSize / 2);
 
-var loseScreenTitle = new Text('white', 'You lost', 180, 'Dimitri, sans-serif', new Coord());
+let loseScreenTitle = new Text('white', 'You lost', 180, 'Dimitri, sans-serif', new Coord());
 loseScreenTitle.pos.x = canvas.hCenter - (loseScreenTitle.width / 2);
 loseScreenTitle.pos.y = canvas.vCenter - (loseScreenTitle.fontSize / 2);
 
-var loseWinScreenBlink = new Text('white', 'Press SPACE to restart', 30, 'Dimitri, sans-serif', new Coord());
+let loseWinScreenBlink = new Text('white', 'Press SPACE to restart', 30, 'Dimitri, sans-serif', new Coord());
 loseWinScreenBlink.pos.x = canvas.hCenter - (loseWinScreenBlink.width / 2);
 loseWinScreenBlink.pos.y = (canvas.vCenter * 1.3) - (loseWinScreenBlink.fontSize / 2);
 
-var isSplashScreen = true;
-var isLoseScreen = false;
-var isWinScreen = false;
-var isPaused = false;
+let isSplashScreen = true;
+let isLoseScreen = false;
+let isWinScreen = false;
+let isPaused = false;
 
 function drawStaticScreen(titleText, blinkText) {
     canvasContext.drawFillRect('black', canvas.width, canvas.height, 0, 0);
 
     canvasContext.drawFillText(titleText.color, titleText.text, titleText.fontSize, titleText.fontFamily, titleText.pos.x, titleText.pos.y);
 
-    var blinking = true;
-    var freq = 1000;
+    let blinking = true;
+    let freq = 1000;
     if (!blinking || Math.floor(Date.now() / freq) % 2) {
         canvasContext.drawFillText(blinkText.color, blinkText.text, blinkText.fontSize, blinkText.fontFamily, blinkText.pos.x, blinkText.pos.y);
     }
@@ -122,6 +122,7 @@ function update() {
     if (isSplashScreen) return;
     if (isPaused) return;
     if (isLoseScreen) return;
+    if (isWinScreen) return;
 
     ball.pos.x += ball.hSpeed;
     ball.pos.y += ball.vSpeed;
@@ -232,10 +233,10 @@ function update() {
     }
 
     // TODO: Tune this.
-    var bvSpeed = -5;
+    let bvSpeed = -5;
 
     // Position of the ball relative to the racketLeft.
-    var ballPosRelative = bvSpeed + (ball.pos.y - (racketLeft.pos.y + racketLeft.height));
+    let ballPosRelative = bvSpeed + (ball.pos.y - (racketLeft.pos.y + racketLeft.height));
 
     //* Hit the left racket
     // Hit the vertical edge
@@ -331,8 +332,8 @@ function update() {
 function game() {
     requestAnimationFrame(game);
 
-    var current = Date.now();
-    var elapsed = current - previous;
+    let current = Date.now();
+    let elapsed = current - previous;
     previous = current;
     lag += elapsed;
 
@@ -349,6 +350,8 @@ function game() {
 
 (function() {
     canvas.addEventListener('mousemove', function(event) {
+        if (isPaused) return;
+
         racketLeft.pos.y = getMousePosition(event).y - (racketLeft.height / 2);
 
         // ***
@@ -396,7 +399,6 @@ function game() {
         if (event.key === ' ') {
             if (isSplashScreen) {
                 isSplashScreen = false;
-                console.log('SPACE PRESSED');
             }
 
             if (isLoseScreen || isWinScreen) {
@@ -409,7 +411,7 @@ function game() {
     });
 
     canvas.addEventListener('click', function(event) {
-        var mousePos = getMousePosition(event);
+        let mousePos = getMousePosition(event);
 
         // Check if the click happened inside the boundaries of the button.
         if ((mousePos.x >= soundButton.pos.x) &&

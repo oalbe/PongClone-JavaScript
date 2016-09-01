@@ -13,7 +13,7 @@ class Debugger {
 
     print(value, content = false) {
         if (this.isEnabled) {
-            var res = value;
+            let res = value;
             if (content) {
                 res += ": " + content;
             }

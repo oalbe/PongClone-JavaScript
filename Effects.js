@@ -1,7 +1,7 @@
 class Effects {
     constructor() {
         this.effects = [];
-        for (var i = 0; i < Effects.effectsNames.length; ++i) {
+        for (let i = 0; i < Effects.effectsNames.length; ++i) {
             this.effects[Effects.effectsNames[i]] =
                 new Audio(Effects.effectsRoot + '/' + Effects.effectsNames[i] + '.ogg');
         }
@@ -9,7 +9,7 @@ class Effects {
     }
 
     muteAll() {
-        for (var i = 0; i < Effects.effectsNames.length; ++i) {
+        for (let i = 0; i < Effects.effectsNames.length; ++i) {
             this.effects[Effects.effectsNames[i]].muted = true;
         }
 
@@ -17,14 +17,14 @@ class Effects {
     }
 
     unmuteAll() {
-        for (var i = 0; i < Effects.effectsNames.length; ++i) {
+        for (let i = 0; i < Effects.effectsNames.length; ++i) {
             this.effects[Effects.effectsNames[i]].muted = false;
         }
 
     }
 
     toggleMuteAll() {
-        for (var i = 0; i < Effects.effectsNames.length; ++i) {
+        for (let i = 0; i < Effects.effectsNames.length; ++i) {
             this.effects[Effects.effectsNames[i]].muted =
                 !this.effects[Effects.effectsNames[i]].muted;
         }

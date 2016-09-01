@@ -7,10 +7,10 @@ function randsign() {
 }
 
 function getMousePosition(event) {
-    var rect = canvas.getBoundingClientRect();
-    var rootElement = document.documentElement;
-    var xMousePos = event.clientX - rect.left - rootElement.scrollLeft;
-    var yMousePos = event.clientY - rect.top - rootElement.scrollTop;
+    let rect = canvas.getBoundingClientRect();
+    let rootElement = document.documentElement;
+    let xMousePos = event.clientX - rect.left - rootElement.scrollLeft;
+    let yMousePos = event.clientY - rect.top - rootElement.scrollTop;
 
     return {
         x: xMousePos,
