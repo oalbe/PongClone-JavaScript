@@ -155,34 +155,40 @@
 
         class Effects {
             constructor() {
-                this.effectsNames = ['lost', 'ball_bounce', 'game_paused'];
-
                 this.effects = [];
-                for (var i = 0; i < this.effectsNames.length; ++i) {
-                    this.effects[this.effectsNames[i]] =
-                        new Audio(effectsRoot + '/' + this.effectsNames[i] + '.ogg');
+                for (var i = 0; i < Effects.effectsNames.length; ++i) {
+                    this.effects[Effects.effectsNames[i]] =
+                        new Audio(effectsRoot + '/' + Effects.effectsNames[i] + '.ogg');
                 }
+
             }
 
             muteAll() {
-                for (var i = 0; i < this.effectsNames.length; ++i) {
-                    this.effects[this.effectsNames[i]].muted = true;
+                for (var i = 0; i < Effects.effectsNames.length; ++i) {
+                    this.effects[Effects.effectsNames[i]].muted = true;
                 }
+
+
             }
 
             unmuteAll() {
-                for (var i = 0; i < this.effectsNames.length; ++i) {
-                    this.effects[this.effectsNames[i]].muted = false;
+                for (var i = 0; i < Effects.effectsNames.length; ++i) {
+                    this.effects[Effects.effectsNames[i]].muted = false;
                 }
+
             }
 
             toggleMuteAll() {
-                for (var i = 0; i < this.effectsNames.length; ++i) {
-                    this.effects[this.effectsNames[i]].muted =
-                        !this.effects[this.effectsNames[i]].muted;
+                for (var i = 0; i < Effects.effectsNames.length; ++i) {
+                    this.effects[Effects.effectsNames[i]].muted =
+                        !this.effects[Effects.effectsNames[i]].muted;
                 }
+
             }
         }
+
+        // Static data member of the class Effects.
+        Effects.effectsNames = ['lost', 'ball_bounce', 'game_paused'];
 
         var audioEffects = new Effects();
 
@@ -207,10 +213,7 @@
         }
 
         CanvasRenderingContext2D.prototype.drawRect = function(
-          color, width, height, xOffset, yOffset, fill, lineWidth) {
-            fill = (typeof fill !== 'undefined') ? fill : true;
-            lineWidth = (typeof lineWidth !== 'undefined') ? lineWidth : 2;
-
+          color, width, height, xOffset, yOffset, fill = true, lineWidth = 2) {
             this.lineCap = 'butt';
             this.lineJoin = 'miter';
 
@@ -238,10 +241,7 @@
         };
 
         CanvasRenderingContext2D.prototype.drawText = function(
-          color, text, fontSize, fontFamily, xOffset, yOffset, fill, textObj) {
-            fill = (typeof fill !== 'undefined') ? fill : true;
-            textObj = (typeof textObj !== 'undefined') ? textObj : false;
-
+          color, text, fontSize, fontFamily, xOffset, yOffset, fill = true, textObj = false) {
             this.textBaseline = 'top';
             this.font = fontSize + "px " + fontFamily;
 
