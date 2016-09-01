@@ -1,5 +1,5 @@
 class Racket {
-    constructor(color, width, height, position, speed = 20) {
+    constructor(color, width, height, position, speed = 5) {
         this.color = color;
         this.width = width;
         this.height = height;

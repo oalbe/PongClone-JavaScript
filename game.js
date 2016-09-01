@@ -13,10 +13,8 @@ var lag = 0;
 var XXXoffset = 5;
 var bhSpeed = 8;
 
-var isPaused = false;
-
 var debug = new Debugger();
-debug.enable();
+debug.disable();
 
 class Coord {
     constructor(x = 0, y = 0) {
@@ -61,40 +59,19 @@ loseWinScreenBlink.pos.x = canvas.hCenter - (loseWinScreenBlink.width / 2);
 loseWinScreenBlink.pos.y = (canvas.vCenter * 1.3) - (loseWinScreenBlink.fontSize / 2);
 
 var isSplashScreen = true;
+var isLoseScreen = false;
+var isWinScreen = false;
+var isPaused = false;
 
-function splashScreen() {
+function drawStaticScreen(titleText, blinkText) {
     canvasContext.drawFillRect('black', canvas.width, canvas.height, 0, 0);
 
-    canvasContext.drawFillText(splashScreenTitle.color, splashScreenTitle.text, splashScreenTitle.fontSize, splashScreenTitle.fontFamily, splashScreenTitle.pos.x, splashScreenTitle.pos.y);
+    canvasContext.drawFillText(titleText.color, titleText.text, titleText.fontSize, titleText.fontFamily, titleText.pos.x, titleText.pos.y);
 
     var blinking = true;
     var freq = 1000;
     if (!blinking || Math.floor(Date.now() / freq) % 2) {
-        canvasContext.drawFillText(splashScreenBlink.color, splashScreenBlink.text, splashScreenBlink.fontSize, splashScreenBlink.fontFamily, splashScreenBlink.pos.x, splashScreenBlink.pos.y);
-    }
-}
-
-function winScreen() {
-    canvasContext.drawFillRect('black', canvas.width, canvas.height, 0, 0);
-
-    canvasContext.drawFillText(winScreenTitle.color, winScreenTitle.text, winScreenTitle.fontSize, winScreenTitle.fontFamily, winScreenTitle.pos.x, winScreenTitle.pos.y);
-
-    var blinking = true;
-    var freq = 1000;
-    if (!blinking || Math.floor(Date.now() / freq) % 2) {
-        canvasContext.drawFillText(loseWinScreenBlink.color, loseWinScreenBlink.text, loseWinScreenBlink.fontSize, loseWinScreenBlink.fontFamily, loseWinScreenBlink.pos.x, loseWinScreenBlink.pos.y);
-    }
-}
-
-function loseScreen() {
-    canvasContext.drawFillRect('black', canvas.width, canvas.height, 0, 0);
-
-    canvasContext.drawFillText(loseScreenTitle.color, loseScreenTitle.text, loseScreenTitle.fontSize, loseScreenTitle.fontFamily, loseScreenTitle.pos.x, loseScreenTitle.pos.y);
-
-    var blinking = true;
-    var freq = 1000;
-    if (!blinking || Math.floor(Date.now() / freq) % 2) {
-        canvasContext.drawFillText(loseWinScreenBlink.color, loseWinScreenBlink.text, loseWinScreenBlink.fontSize, loseWinScreenBlink.fontFamily, loseWinScreenBlink.pos.x, loseWinScreenBlink.pos.y);
+        canvasContext.drawFillText(blinkText.color, blinkText.text, blinkText.fontSize, blinkText.fontFamily, blinkText.pos.x, blinkText.pos.y);
     }
 }
 
@@ -107,22 +84,18 @@ function render() {
         canvasContext.drawFillRect('white', soundButton.width, soundButton.height, soundButton.pos.x, soundButton.pos.y);
     }
 
-    // Display splash screen and nothing else.
     if (isSplashScreen) {
-        splashScreen();
-
+        drawStaticScreen(splashScreenTitle, splashScreenBlink);
         return;
     }
 
     if (isLoseScreen) {
-        loseScreen();
-
+        drawStaticScreen(loseScreenTitle, loseWinScreenBlink);
         return;
     }
 
     if (isWinScreen) {
-        winScreen();
-
+        drawStaticScreen(winScreenTitle, loseWinScreenBlink);
         return;
     }
 
@@ -144,9 +117,6 @@ function render() {
 
     canvasContext.drawCirc('white', ball.radius, ball.pos.x, ball.pos.y);
 }
-
-var isLoseScreen = false;
-var isWinScreen = false;
 
 function update() {
     if (isSplashScreen) return;
