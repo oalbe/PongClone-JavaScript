@@ -127,6 +127,12 @@ function render() {
         return;
     }
 
+    if (isWinScreen) {
+        winScreen();
+
+        return;
+    }
+
     if (isPaused) {
         canvasContext.drawFillText(
             pauseText.color, pauseText.text, pauseText.fontSize, pauseText.fontFamily,
