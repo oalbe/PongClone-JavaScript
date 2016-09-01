@@ -59,6 +59,14 @@ var winScreenBlink = new Text('white', 'Press SPACE to restart', 30, 'Dimitri, s
 winScreenBlink.pos.x = canvas.hCenter - (winScreenBlink.width / 2);
 winScreenBlink.pos.y = (canvas.vCenter * 1.3) - (winScreenBlink.fontSize / 2);
 
+var loseScreenTitle = new Text('white', 'You lost', 180, 'Dimitri, sans-serif', new Coord());
+loseScreenTitle.pos.x = canvas.hCenter - (loseScreenTitle.width / 2);
+loseScreenTitle.pos.y = canvas.vCenter - (loseScreenTitle.fontSize / 2);
+
+var loseScreenBlink = new Text('white', 'Press SPACE to restart', 30, 'Dimitri, sans-serif', new Coord());
+loseScreenBlink.pos.x = canvas.hCenter - (loseScreenBlink.width / 2);
+loseScreenBlink.pos.y = (canvas.vCenter * 1.3) - (loseScreenBlink.fontSize / 2);
+
 var isSplashScreen = true;
 
 function splashScreen() {
@@ -85,6 +93,18 @@ function winScreen() {
     }
 }
 
+function loseScreen() {
+    canvasContext.drawFillRect('black', canvas.width, canvas.height, 0, 0);
+
+    canvasContext.drawFillText(loseScreenTitle.color, loseScreenTitle.text, loseScreenTitle.fontSize, loseScreenTitle.fontFamily, loseScreenTitle.pos.x, loseScreenTitle.pos.y);
+
+    var blinking = true;
+    var freq = 1000;
+    if (!blinking || Math.floor(Date.now() / freq) % 2) {
+        canvasContext.drawFillText(loseScreenBlink.color, loseScreenBlink.text, loseScreenBlink.fontSize, loseScreenBlink.fontFamily, loseScreenBlink.pos.x, loseScreenBlink.pos.y);
+    }
+}
+
 function render() {
     canvasContext.drawFillRect('black', canvas.width, canvas.height, 0, 0);
 
@@ -97,6 +117,12 @@ function render() {
     // Display splashscreen and nothing else.
     if (isSplashScreen) {
         splashScreen();
+
+        return;
+    }
+
+    if (isLoseScreen) {
+        loseScreen();
 
         return;
     }
@@ -120,14 +146,13 @@ function render() {
     canvasContext.drawCirc('white', ball.radius, ball.pos.x, ball.pos.y);
 }
 
-function update() {
-    if (isSplashScreen) {
-        return;
-    }
+var isLoseScreen = false;
+var isWinScreen = false;
 
-    if (isPaused) {
-        return;
-    }
+function update() {
+    if (isSplashScreen) return;
+    if (isPaused) return;
+    if (isLoseScreen) return;
 
     ball.pos.x = ball.pos.x + ball.hSpeed;
     ball.pos.y = ball.pos.y + ball.vSpeed;
@@ -198,6 +223,12 @@ function update() {
 
         audioEffects.effects.lost.play();
 
+        if (playerRight.getScore() >= 5) {
+            isLoseScreen = true;
+
+            return;
+        }
+
         ball.restart();
     }
 
@@ -207,6 +238,12 @@ function update() {
         playerLeft.updateScore();
 
         audioEffects.effects.lost.play();
+
+        if (playerLeft.getScore() >= 5) {
+            isWinScreen = true;
+
+            return;
+        }
 
         ball.restart();
     }
@@ -380,11 +417,24 @@ function game() {
             debug.print("'p'-key down: Game paused.");
         }
 
+        // Toggle mute
+        if (event.key === 'm') {
+            soundButton.click();
+            audioEffects.toggleMuteAll();
+        }
+
         // Space pressed
-        if (event.key === " ") {
+        if (event.key === ' ') {
             if (isSplashScreen) {
                 isSplashScreen = false;
                 console.log('SPACE PRESSED');
+            }
+
+            if (isLoseScreen || isWinScreen) {
+                isLoseScreen = isWinScreen = false;
+                ball.restart();
+                playerRight.setScore(0);
+                playerLeft.setScore(0);
             }
         }
     });
