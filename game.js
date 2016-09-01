@@ -18,53 +18,8 @@ var bhSpeed = 8;
 
 var isPaused = false;
 
-class Debugger {
-    constructor() {
-        this.isEnabled = false;
-    }
-
-    enable() {
-        this.isEnabled = true;
-    }
-
-    disable() {
-        this.isEnabled = false;
-    }
-
-    print(value, content = false) {
-        if (this.isEnabled) {
-            var res = value;
-            if (content) {
-                res += ": " + content;
-            }
-
-            console.log(res);
-        }
-    }
-}
-
 var debug = new Debugger();
 debug.enable();
-
-function randbound(min, max) {
-    return Math.random() * (max - min) + min;
-}
-
-function randsign() {
-    return (randbound(0, 100) > 50) ? -1 : 1;
-}
-
-function getMousePosition(event) {
-    var rect = canvas.getBoundingClientRect();
-    var rootElement = document.documentElement;
-    var xMousePos = event.clientX - rect.left - rootElement.scrollLeft;
-    var yMousePos = event.clientY - rect.top - rootElement.scrollTop;
-
-    return {
-        x: xMousePos,
-        y: yMousePos
-    };
-}
 
 class Coord {
     constructor(x = 0, y = 0) {
@@ -73,217 +28,7 @@ class Coord {
     }
 }
 
-class Player {
-    constructor(name) {
-        this.name = name;
-        this._score = 0;
-    }
-
-    setScore(newScore) {
-        this._score = newScore;
-    }
-
-    getScore() {
-        return this._score.toString();
-    }
-
-    updateScore() {
-        ++this._score;
-    }
-}
-
-// TODO: Consider defaulting both the speeds and the position
-class Ball {
-    constructor(color, radius, hSpeed, vSpeed, position) {
-        this.color = color;
-        this.radius = radius;
-        this.hSpeed = hSpeed;
-        this.vSpeed = vSpeed;
-        this.pos = position;
-    }
-
-    restart() {
-        this.pos.x = canvas.hCenter;
-        this.pos.y = canvas.vCenter;
-
-        this.hSpeed = randsign() * bhSpeed;
-        this.vSpeed = randbound(-10, 10);
-    }
-}
-
-class Racket {
-    constructor(color, width, height, position, speed = 20) {
-        this.color = color;
-        this.width = width;
-        this.height = height;
-        this.pos = position;
-        this.speed = speed;
-    }
-
-    center() {
-        return {
-            x: this.pos.x + (this.width / 2),
-            y: this.pos.y + (this.height / 2)
-        };
-    }
-
-    moveToRelative(relativePosition) {
-        this.pos.y = relativePosition - (this.height / 2);
-    }
-
-    moveToOrig() {
-        this.moveToRelative(canvas.vCenter);
-    }
-}
-
-class Button {
-    constructor(width, height, borderWidth, position) {
-        this.width = width;
-        this.height = height;
-        this.borderWidth = borderWidth;
-        this.pos = position;
-
-        this.clicked = false;
-    }
-
-    click() {
-        this.clicked = !this.clicked;
-    }
-}
-
-class Effects {
-    constructor() {
-        this.effects = [];
-        for (var i = 0; i < Effects.effectsNames.length; ++i) {
-            this.effects[Effects.effectsNames[i]] =
-                new Audio(effectsRoot + '/' + Effects.effectsNames[i] + '.ogg');
-        }
-
-    }
-
-    muteAll() {
-        for (var i = 0; i < Effects.effectsNames.length; ++i) {
-            this.effects[Effects.effectsNames[i]].muted = true;
-        }
-
-
-    }
-
-    unmuteAll() {
-        for (var i = 0; i < Effects.effectsNames.length; ++i) {
-            this.effects[Effects.effectsNames[i]].muted = false;
-        }
-
-    }
-
-    toggleMuteAll() {
-        for (var i = 0; i < Effects.effectsNames.length; ++i) {
-            this.effects[Effects.effectsNames[i]].muted =
-                !this.effects[Effects.effectsNames[i]].muted;
-        }
-
-    }
-}
-
-// Static data member of the class Effects.
-Effects.effectsNames = ['lost', 'ball_bounce', 'game_paused'];
-
 var audioEffects = new Effects();
-
-class Text {
-    constructor(color, text, fontSize, fontFamily, position, fill = true) {
-        this.color = color;
-        this.text = text;
-        this.fontSize = fontSize;
-        this.fontFamily = fontFamily;
-        this.width = this.width_helper();
-        this.height = fontSize;
-        this.pos = position;
-        this.fill = fill;
-    }
-
-    width_helper() {
-        canvasContext.textBaseline = 'top';
-        canvasContext.font = this.fontSize + "px " + this.fontFamily;
-
-        return canvasContext.measureText(this.text).width;
-    }
-}
-
-CanvasRenderingContext2D.prototype.drawFillRect = function(
-  color, width, height, xOffset, yOffset) {
-    this.lineCap = 'butt';
-    this.lineJoin = 'miter';
-
-    this.fillStyle = color;
-    this.fillRect(xOffset, yOffset, width, height);
-
-    return this;
-};
-
-CanvasRenderingContext2D.prototype.drawStrokeRect = function(
-  color, width, height, xOffset, yOffset, lineWidth = 2) {
-    this.lineCap = 'butt';
-    this.lineJoin = 'miter';
-    this.strokeStyle = color;
-    this.lineWidth = lineWidth;
-
-    this.setLineDash([0, 0]); // Resets any pre-set line dash styles
-    this.strokeRect(xOffset, yOffset, width, height);
-
-    return this;
-};
-
-CanvasRenderingContext2D.prototype.drawCirc = function(color, radius, xCenter, yCenter) {
-    this.fillStyle = color;
-    this.beginPath();
-    this.arc(xCenter, yCenter, radius, 0, 2 * Math.PI);
-    this.fill();
-
-    return this;
-};
-
-CanvasRenderingContext2D.prototype.drawFillText = function(
-  color, text, fontSize, fontFamily, xOffset, yOffset) {
-    this.textBaseline = 'top';
-    this.font = fontSize + "px " + fontFamily;
-
-    this.fillStyle = color;
-    this.fillText(text, xOffset, yOffset);
-
-    return this;
-};
-
-CanvasRenderingContext2D.prototype.drawStrokeText = function(
-  color, text, fontSize, fontFamily, xOffset, yOffset) {
-    this.textBaseline = 'top';
-    this.font = fontSize + "px " + fontFamily;
-
-    this.strokeStyle = color;
-    this.strokeText(text, xOffset, yOffset);
-
-
-    return this;
-};
-
-CanvasRenderingContext2D.prototype.drawLine = function(
-  color, width, lineDash, beginPointCoord, endPointCoord, dashOffset) {
-    this.strokeStyle = color;
-    this.lineWidth = width;
-    this.lineCap = 'butt';
-    this.lineJoin = 'miter';
-    this.miterLimit = 1;
-
-    this.lineDashOffset = dashOffset;
-    this.setLineDash(lineDash);
-
-    this.beginPath();
-    this.moveTo(beginPointCoord.x, beginPointCoord.y);
-    this.lineTo(endPointCoord.x, endPointCoord.y);
-    this.stroke();
-
-    return this;
-};
 
 var playerLeft = new Player("PlayerName");
 var playerRight = new Player("AI");
@@ -323,12 +68,11 @@ function splashScreen() {
 function render() {
     canvasContext.drawFillRect('black', canvas.width, canvas.height, 0, 0);
 
-    var buttonForm = false;
-    if (soundButton.clicked) {
-        buttonForm = true;
-    }
+    canvasContext.drawStrokeRect('white', soundButton.width, soundButton.height, soundButton.pos.x, soundButton.pos.y);
 
-    canvasContext.drawStrokeRect('white', soundButton.width, soundButton.height, soundButton.pos.x, soundButton.pos.y, buttonForm);
+    if (soundButton.clicked) {
+        canvasContext.drawFillRect('white', soundButton.width, soundButton.height, soundButton.pos.x, soundButton.pos.y);
+    }
 
     // Display splashscreen and nothing else.
     if (isSplashScreen) {
