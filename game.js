@@ -323,31 +323,37 @@ function render() {
 
     canvasContext.drawRect('white', soundButton.width, soundButton.height, soundButton.pos.x, soundButton.pos.y, buttonForm);
 
+    // Display splashscreen and nothing else.
     if (isSplashScreen) {
         splashScreen();
-    } else {
-        if (isPaused) {
-            canvasContext.drawText(
-                pauseText.color, pauseText.text, pauseText.fontSize, pauseText.fontFamily,
-                pauseText.pos.x, pauseText.pos.y);
-        }
 
-        canvasContext.drawText("white", playerLeft.getScore(), 24, "sans-serif", canvas.width / 4, 50);
-        canvasContext.drawText("white", playerRight.getScore(), 24, "sans-serif", canvas.width - (canvas.width / 4), 50);
-
-        canvasContext.drawLine('white', 4, [40, 40], new Coord(canvas.width / 2, 0), new Coord(canvas.width / 2, canvas.height), 0);
-
-        canvasContext.drawRect(racketLeft.color, racketLeft.width, racketLeft.height, racketLeft.pos.x, racketLeft.pos.y);
-        canvasContext.drawRect(racketRight.color, racketRight.width, racketRight.height, racketRight.pos.x, racketRight.pos.y);
-
-        canvasContext.drawCirc('white', ball.radius, ball.pos.x, ball.pos.y);
+        return;
     }
+
+    if (isPaused) {
+        canvasContext.drawText(
+            pauseText.color, pauseText.text, pauseText.fontSize, pauseText.fontFamily,
+            pauseText.pos.x, pauseText.pos.y);
+
+        // return; // A return here would make everything else disappear when the game is paused.
+    }
+
+    canvasContext.drawText("white", playerLeft.getScore(), 24, "sans-serif", canvas.width / 4, 50);
+    canvasContext.drawText("white", playerRight.getScore(), 24, "sans-serif", canvas.width - (canvas.width / 4), 50);
+
+    canvasContext.drawLine('white', 4, [40, 40], new Coord(canvas.width / 2, 0), new Coord(canvas.width / 2, canvas.height), 0);
+
+    canvasContext.drawRect(racketLeft.color, racketLeft.width, racketLeft.height, racketLeft.pos.x, racketLeft.pos.y);
+    canvasContext.drawRect(racketRight.color, racketRight.width, racketRight.height, racketRight.pos.x, racketRight.pos.y);
+
+    canvasContext.drawCirc('white', ball.radius, ball.pos.x, ball.pos.y);
 }
 
 function update() {
     if (isSplashScreen) {
         return;
     }
+
     if (isPaused) {
         return;
     }
