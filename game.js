@@ -239,13 +239,9 @@ CanvasRenderingContext2D.prototype.drawCirc = function(color, radius, xCenter, y
 };
 
 CanvasRenderingContext2D.prototype.drawText = function(
-  color, text, fontSize, fontFamily, xOffset, yOffset, fill = true, textObj = false) {
+  color, text, fontSize, fontFamily, xOffset, yOffset, fill = true) {
     this.textBaseline = 'top';
     this.font = fontSize + "px " + fontFamily;
-
-    if (textObj) {
-        textObj.width = this.measureText(text).width;
-    }
 
     if (fill) {
         this.fillStyle = color;
