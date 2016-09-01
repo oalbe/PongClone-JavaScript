@@ -210,21 +210,26 @@ class Text {
     }
 }
 
-CanvasRenderingContext2D.prototype.drawRect = function(
-  color, width, height, xOffset, yOffset, fill = true, lineWidth = 2) {
+CanvasRenderingContext2D.prototype.drawFillRect = function(
+  color, width, height, xOffset, yOffset) {
     this.lineCap = 'butt';
     this.lineJoin = 'miter';
 
-    if (fill) {
-        this.fillStyle = color;
-        this.fillRect(xOffset, yOffset, width, height);
-    } else {
-        this.strokeStyle = color;
-        this.lineWidth = lineWidth;
+    this.fillStyle = color;
+    this.fillRect(xOffset, yOffset, width, height);
 
-        this.setLineDash([0, 0]); // Resets any pre-set line dash styles
-        this.strokeRect(xOffset, yOffset, width, height);
-    }
+    return this;
+};
+
+CanvasRenderingContext2D.prototype.drawStrokeRect = function(
+  color, width, height, xOffset, yOffset, lineWidth = 2) {
+    this.lineCap = 'butt';
+    this.lineJoin = 'miter';
+    this.strokeStyle = color;
+    this.lineWidth = lineWidth;
+
+    this.setLineDash([0, 0]); // Resets any pre-set line dash styles
+    this.strokeRect(xOffset, yOffset, width, height);
 
     return this;
 };
@@ -265,7 +270,6 @@ CanvasRenderingContext2D.prototype.drawLine = function(
   color, width, lineDash, beginPointCoord, endPointCoord, dashOffset) {
     this.strokeStyle = color;
     this.lineWidth = width;
-
     this.lineCap = 'butt';
     this.lineJoin = 'miter';
     this.miterLimit = 1;
@@ -305,7 +309,7 @@ splashScreenBlink.pos.y = (canvas.vCenter * 1.3) - (splashScreenBlink.fontSize /
 var isSplashScreen = true;
 
 function splashScreen() {
-    canvasContext.drawRect('black', canvas.width, canvas.height, 0, 0);
+    canvasContext.drawFillRect('black', canvas.width, canvas.height, 0, 0);
 
     canvasContext.drawFillText(splashScreenTitle.color, splashScreenTitle.text, splashScreenTitle.fontSize, splashScreenTitle.fontFamily, splashScreenTitle.pos.x, splashScreenTitle.pos.y);
 
@@ -317,14 +321,14 @@ function splashScreen() {
 }
 
 function render() {
-    canvasContext.drawRect('black', canvas.width, canvas.height, 0, 0);
+    canvasContext.drawFillRect('black', canvas.width, canvas.height, 0, 0);
 
     var buttonForm = false;
     if (soundButton.clicked) {
         buttonForm = true;
     }
 
-    canvasContext.drawRect('white', soundButton.width, soundButton.height, soundButton.pos.x, soundButton.pos.y, buttonForm);
+    canvasContext.drawStrokeRect('white', soundButton.width, soundButton.height, soundButton.pos.x, soundButton.pos.y, buttonForm);
 
     // Display splashscreen and nothing else.
     if (isSplashScreen) {
@@ -346,8 +350,8 @@ function render() {
 
     canvasContext.drawLine('white', 4, [40, 40], new Coord(canvas.width / 2, 0), new Coord(canvas.width / 2, canvas.height), 0);
 
-    canvasContext.drawRect(racketLeft.color, racketLeft.width, racketLeft.height, racketLeft.pos.x, racketLeft.pos.y);
-    canvasContext.drawRect(racketRight.color, racketRight.width, racketRight.height, racketRight.pos.x, racketRight.pos.y);
+    canvasContext.drawFillRect(racketLeft.color, racketLeft.width, racketLeft.height, racketLeft.pos.x, racketLeft.pos.y);
+    canvasContext.drawFillRect(racketRight.color, racketRight.width, racketRight.height, racketRight.pos.x, racketRight.pos.y);
 
     canvasContext.drawCirc('white', ball.radius, ball.pos.x, ball.pos.y);
 }
