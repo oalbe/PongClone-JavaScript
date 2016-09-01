@@ -3,7 +3,7 @@ class Effects {
         this.effects = [];
         for (var i = 0; i < Effects.effectsNames.length; ++i) {
             this.effects[Effects.effectsNames[i]] =
-                new Audio(effectsRoot + '/' + Effects.effectsNames[i] + '.ogg');
+                new Audio(Effects.effectsRoot + '/' + Effects.effectsNames[i] + '.ogg');
         }
 
     }
@@ -34,3 +34,4 @@ class Effects {
 
 // Static data member of the class Effects.
 Effects.effectsNames = ['lost', 'ball_bounce', 'game_paused'];
+Effects.effectsRoot = 'sounds';
