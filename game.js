@@ -277,14 +277,6 @@ function update() {
         }
     }
 
-    // Hit the horizontal lower edge
-    // if ((ball.pos.y - ball.radius) <= (racketLeft.pos.y + racketLeft.height)) {
-    //     if ((ball.pos.x + ball.radius) <= 20) {
-    //         console.log("COLLISION LOWER SIDE!");
-    //         // ball.vSpeed = -ball.vSpeed;
-    //     }
-    // }
-
     //* Hit the right racket
     // Hit the vertical edge
     if ((ball.pos.x + ball.radius) >= (canvas.width -(racketRight.width + XXXoffset))) {
@@ -318,15 +310,6 @@ function update() {
             ball.hSpeed = -ball.hSpeed;
         }
     }
-
-    // Hit the horizontal lower edge
-    // if ((ball.pos.y - ball.radius) < (racketRight.pos.y + racketRight.height)) {
-    //     if ((ball.pos.x + ball.radius) <= 20) {
-    //         console.log("COLLISION LOWER SIDE!");
-    //         // ball.hSpeed = ball.hSpeed / 2;
-    //         ball.vSpeed = -ball.vSpeed;
-    //     }
-    // }
 } // /update()
 
 function game() {
