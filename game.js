@@ -186,8 +186,10 @@ function update() {
     // ***
     // Ball collisions
     // ***
+
+    // TODO:#: Code replication here, remove it.
     // Left boundary
-    if ((ball.pos.x) < 0) {
+    if ((ball.pos.x - ball.radius) <= XXXoffset) {
         // It hit the player "goal". Reset it to the center.
         playerRight.updateScore();
 
@@ -203,7 +205,7 @@ function update() {
     }
 
     // Right boundary
-    if ((ball.pos.x + ball.radius) >= canvas.width) {
+    if ((ball.pos.x + ball.radius) >= (canvas.width - XXXoffset)) {
         // It hit the AI "goal". Reset it to the center.
         playerLeft.updateScore();
 
@@ -217,20 +219,23 @@ function update() {
 
         ball.restart();
     }
+    // #:/
 
+    // TODO:#: Code replication here, remove it.
     // Top boundary
-    if ((ball.pos.y - ball.radius) <= 0) {
+    if ((ball.pos.y - ball.radius) <= XXXoffset) {
         audioEffects.effects.ball_bounce.play();
 
         ball.vSpeed = -ball.vSpeed;
     }
 
     // Bottom boundary
-    if ((ball.pos.y + ball.radius) >= canvas.height) {
+    if ((ball.pos.y + ball.radius) >= (canvas.height - XXXoffset)) {
         audioEffects.effects.ball_bounce.play();
 
         ball.vSpeed = -ball.vSpeed;
     }
+    // #:/
 
     // TODO: Tune this.
     let bvSpeed = -5;
