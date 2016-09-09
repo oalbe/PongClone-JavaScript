@@ -1,3 +1,5 @@
+// TODO: Consider the possibility of adding bonuses to pick during game.
+
 const FPS = 60;
 const MS_PER_UPDATE = 1000 / FPS;
 
@@ -237,48 +239,18 @@ function update() {
     }
     // #:/
 
-    // TODO: Tune this.
-    let bvSpeed = -5;
-
-    // Position of the ball relative to the racketLeft.
-    let ballPosRelative = bvSpeed + (ball.pos.y - (racketLeft.pos.y + racketLeft.height));
-
     //* Hit the left racket
     // Hit the vertical edge
     if ((ball.pos.x - ball.radius) <= (racketLeft.width + XXXoffset)) {
         audioEffects.effects.ball_bounce.play();
 
-        // Check if it hit the uppermost quarter
+        let relativeBallPos = ball.pos.y - racketLeft.pos.y;
+
+        // Ball hit inside the racket
         if ((ball.pos.y >= racketLeft.pos.y) &&
-            (ball.pos.y <= (racketLeft.pos.y + (racketLeft.height / 4)))) {
-            debug.print("RacketLeft: COLLISION UPPER FIRST!");
+          (ball.pos.y <= (racketLeft.pos.y + racketLeft.height))) {
             ball.hSpeed = -ball.hSpeed;
-
-            ball.vSpeed = ballPosRelative * 0.33;
-        }
-
-        // Check if it hit the upper middle quarter
-        if ((ball.pos.y > (racketLeft.pos.y + (racketLeft.height / 4))) &&
-            (ball.pos.y <= (racketLeft.pos.y + (racketLeft.height / 2)))) {
-            debug.print("RacketLeft: COLLISION UPPER MIDDLE!");
-            ball.hSpeed = -ball.hSpeed;
-            ball.vSpeed = ballPosRelative * 0.16;
-        }
-
-        // Check if it hit the lower middle quarter
-        if ((ball.pos.y > (racketLeft.pos.y + (racketLeft.height / 2)) &&
-            (ball.pos.y <= (racketLeft.pos.y + ((racketLeft.height / 4) * 3))))) {
-            debug.print("RacketLeft: COLLISION LOWER MIDDLE!");
-            ball.hSpeed = -ball.hSpeed;
-            ball.vSpeed = -ballPosRelative * 0.16;
-        }
-
-        // Check if it hit the lowermost quarter
-        if ((ball.pos.y > (racketLeft.pos.y + ((racketLeft.height / 4) * 3)) &&
-            (ball.pos.y <= (racketLeft.pos.y + racketLeft.height)))) {
-            debug.print("RacketLeft: COLLISION LOWER FIRST!");
-            ball.hSpeed = -ball.hSpeed;
-            ball.vSpeed = -ballPosRelative * 0.33;
+            ball.vSpeed = 30 * (((2 * relativeBallPos) / racketLeft.height) - 1);
         }
     }
 
@@ -287,32 +259,13 @@ function update() {
     if ((ball.pos.x + ball.radius) >= (canvas.width -(racketRight.width + XXXoffset))) {
         audioEffects.effects.ball_bounce.play();
 
-        // Check if it hit the uppermost quarter
+        let relativeBallPos = ball.pos.y - racketRight.pos.y;
+
+        // Ball hit inside the racket
         if ((ball.pos.y >= racketRight.pos.y) &&
-            (ball.pos.y <= (racketRight.pos.y + (racketRight.height / 4)))) {
-            debug.print("RacketRight: COLLISION UPPER FIRST!");
+          (ball.pos.y <= (racketRight.pos.y + racketRight.height))) {
             ball.hSpeed = -ball.hSpeed;
-        }
-
-        // Check if it hit the upper middle quarter
-        if ((ball.pos.y > (racketRight.pos.y + (racketRight.height / 4))) &&
-            (ball.pos.y <= (racketRight.pos.y + (racketRight.height / 2)))) {
-            debug.print("RacketRight: COLLISION UPPER MIDDLE!");
-            ball.hSpeed = -ball.hSpeed;
-        }
-
-        // Check if it hit the lower middle quarter
-        if ((ball.pos.y > (racketRight.pos.y + (racketRight.height / 2)) &&
-            (ball.pos.y <= (racketRight.pos.y + ((racketRight.height / 4) * 3))))) {
-            debug.print("RacketRight: COLLISION LOWER MIDDLE!");
-            ball.hSpeed = -ball.hSpeed;
-        }
-
-        // Check if it hit the lowermost quarter
-        if ((ball.pos.y > (racketRight.pos.y + ((racketRight.height / 4) * 3)) &&
-            (ball.pos.y <= (racketRight.pos.y + racketRight.height)))) {
-            debug.print("RacketRight: COLLISION LOWER FIRST!");
-            ball.hSpeed = -ball.hSpeed;
+            ball.vSpeed = 30 * (((2 * relativeBallPos) / racketRight.height) - 1);
         }
     }
 } // /update()
