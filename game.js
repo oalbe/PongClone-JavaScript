@@ -186,7 +186,7 @@ function update() {
     // Ball collisions
     // ***
 
-    // TODO:#: Code replication here, remove it.
+    // TODO:#: Code duplication here, remove it.
     // Left boundary
     if ((ball.pos.x - ball.radius) <= Racket.offset) {
         // It hit the player "goal". Reset it to the center.
@@ -220,7 +220,7 @@ function update() {
     }
     // #:/
 
-    // TODO:#: Code replication here, remove it.
+    // TODO:#: Code duplication here, remove it.
     // Top boundary
     if ((ball.pos.y - ball.radius) <= Racket.offset) {
         audioEffects.effects.ball_bounce.play();
@@ -236,6 +236,7 @@ function update() {
     }
     // #:/
 
+    // TODO:#: Code duplication here, remove it.
     //* Hit the left racket
     // Hit the vertical edge
     if ((ball.pos.x - ball.radius) <= (racketLeft.width + Racket.offset)) {
@@ -265,6 +266,7 @@ function update() {
             ball.vSpeed = 30 * (((2 * relativeBallPos) / racketRight.height) - 1);
         }
     }
+    // #:/
 } // /update()
 
 function game() {
@@ -281,7 +283,7 @@ function game() {
         update();
 
         lag -= MS_PER_UPDATE;
-    } // /game loop
+    }
 
     render();
 }
@@ -295,6 +297,8 @@ function game() {
         // ***
         // Rackets collisions
         // ***
+        //
+        // TODO:#: Code duplication here, remove it.
         // * Left racket
         // Racket top boundary
         if (racketLeft.pos.y <= 0) {
@@ -316,6 +320,7 @@ function game() {
         if (racketRight.pos.y >= (canvas.height - racketRight.height)) {
             racketRight.pos.y = canvas.height - racketRight.height - Racket.offset;
         }
+        // #:/
     });
 
     document.addEventListener('keydown', function(event) {
