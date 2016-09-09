@@ -27,7 +27,7 @@ let audioEffects = new Effects();
 let playerLeft = new Player("PlayerName");
 let playerRight = new Player("AI");
 
-let ball = new Ball('white', 10, randsign() * 8, randbound(-10, 10), new Coord(canvas.hCenter, canvas.vCenter));
+let ball = new Ball('white', 10, randsign() * Ball.basehSpeed, randbound(-10, 10), new Coord(canvas.hCenter, canvas.vCenter));
 let racketLeft = new Racket('white', 15, 100, new Coord(Racket.offset, 50));
 let racketRight = new Racket('white', 15, 100, new Coord(canvas.width - 15 - Racket.offset, 50));
 

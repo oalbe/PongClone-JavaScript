@@ -12,7 +12,9 @@ class Ball {
         this.pos.x = canvas.hCenter;
         this.pos.y = canvas.vCenter;
 
-        this.hSpeed = randsign() * bhSpeed;
+        this.hSpeed = randsign() * Ball.basehSpeed;
         this.vSpeed = randbound(-10, 10);
     }
 }
+
+Ball.basehSpeed = 8;
