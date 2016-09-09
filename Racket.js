@@ -22,3 +22,5 @@ class Racket {
         this.moveToRelative(canvas.vCenter);
     }
 }
+
+Racket.offset = 5;

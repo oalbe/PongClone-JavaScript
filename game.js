@@ -12,7 +12,6 @@ canvas.vCenter = canvas.height / 2;
 let previous = Date.now();
 let lag = 0;
 
-let XXXoffset = 5;
 let bhSpeed = 8;
 
 let debug = new Debugger();
@@ -31,8 +30,8 @@ let playerLeft = new Player("PlayerName");
 let playerRight = new Player("AI");
 
 let ball = new Ball('white', 10, randsign() * bhSpeed, randbound(-10, 10), new Coord(canvas.hCenter, canvas.vCenter));
-let racketLeft = new Racket('white', 15, 100, new Coord(5, 50));
-let racketRight = new Racket('white', 15, 100, new Coord(canvas.width - 20, 50));
+let racketLeft = new Racket('white', 15, 100, new Coord(Racket.offset, 50));
+let racketRight = new Racket('white', 15, 100, new Coord(canvas.width - 15 - Racket.offset, 50));
 
 let soundButton = new Button(20, 20, 2, new Coord(canvas.width - 20 - 50, 10));
 
@@ -191,7 +190,7 @@ function update() {
 
     // TODO:#: Code replication here, remove it.
     // Left boundary
-    if ((ball.pos.x - ball.radius) <= XXXoffset) {
+    if ((ball.pos.x - ball.radius) <= Racket.offset) {
         // It hit the player "goal". Reset it to the center.
         playerRight.updateScore();
 
@@ -207,7 +206,7 @@ function update() {
     }
 
     // Right boundary
-    if ((ball.pos.x + ball.radius) >= (canvas.width - XXXoffset)) {
+    if ((ball.pos.x + ball.radius) >= (canvas.width - Racket.offset)) {
         // It hit the AI "goal". Reset it to the center.
         playerLeft.updateScore();
 
@@ -225,14 +224,14 @@ function update() {
 
     // TODO:#: Code replication here, remove it.
     // Top boundary
-    if ((ball.pos.y - ball.radius) <= XXXoffset) {
+    if ((ball.pos.y - ball.radius) <= Racket.offset) {
         audioEffects.effects.ball_bounce.play();
 
         ball.vSpeed = -ball.vSpeed;
     }
 
     // Bottom boundary
-    if ((ball.pos.y + ball.radius) >= (canvas.height - XXXoffset)) {
+    if ((ball.pos.y + ball.radius) >= (canvas.height - Racket.offset)) {
         audioEffects.effects.ball_bounce.play();
 
         ball.vSpeed = -ball.vSpeed;
@@ -241,7 +240,7 @@ function update() {
 
     //* Hit the left racket
     // Hit the vertical edge
-    if ((ball.pos.x - ball.radius) <= (racketLeft.width + XXXoffset)) {
+    if ((ball.pos.x - ball.radius) <= (racketLeft.width + Racket.offset)) {
         audioEffects.effects.ball_bounce.play();
 
         let relativeBallPos = ball.pos.y - racketLeft.pos.y;
@@ -256,7 +255,7 @@ function update() {
 
     //* Hit the right racket
     // Hit the vertical edge
-    if ((ball.pos.x + ball.radius) >= (canvas.width -(racketRight.width + XXXoffset))) {
+    if ((ball.pos.x + ball.radius) >= (canvas.width -(racketRight.width + Racket.offset))) {
         audioEffects.effects.ball_bounce.play();
 
         let relativeBallPos = ball.pos.y - racketRight.pos.y;
@@ -301,23 +300,23 @@ function game() {
         // * Left racket
         // Racket top boundary
         if (racketLeft.pos.y <= 0) {
-            racketLeft.pos.y = 5;
+            racketLeft.pos.y = Racket.offset;
         }
 
         // Racket bottom boundary
         if (racketLeft.pos.y >= (canvas.height - racketLeft.height)) {
-            racketLeft.pos.y = canvas.height - racketLeft.height - 5;
+            racketLeft.pos.y = canvas.height - racketLeft.height - Racket.offset;
         }
 
         //* Right racket
         // Racket top boundary
         if (racketRight.pos.y <= 0) {
-            racketRight.pos.y = 5;
+            racketRight.pos.y = Racket.offset;
         }
 
         // Racket bottom boundary
         if (racketRight.pos.y >= (canvas.height - racketRight.height)) {
-            racketRight.pos.y = canvas.height - racketRight.height - 5;
+            racketRight.pos.y = canvas.height - racketRight.height - Racket.offset;
         }
     });
 
