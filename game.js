@@ -158,31 +158,6 @@ function update() {
     }
 
     // ***
-    // Rackets collisions
-    // ***
-    // * Left racket
-    // Racket top boundary
-    if (racketLeft.pos.y <= 0) {
-        racketLeft.pos.y = Racket.offset;
-    }
-
-    // Racket bottom boundary
-    if (racketLeft.pos.y >= (canvas.height - racketLeft.height)) {
-        racketLeft.pos.y = canvas.height - racketLeft.height - Racket.offset;
-    }
-
-    //* Right racket
-    // Racket top boundary
-    if (racketRight.pos.y <= 0) {
-        racketRight.pos.y = Racket.offset;
-    }
-
-    // Racket bottom boundary
-    if (racketRight.pos.y >= (canvas.height - racketRight.height)) {
-        racketRight.pos.y = canvas.height - racketRight.height - Racket.offset;
-    }
-
-    // ***
     // Ball collisions
     // ***
 
@@ -292,35 +267,7 @@ function game() {
     canvas.addEventListener('mousemove', function(event) {
         if (isPaused) return;
 
-        racketLeft.pos.y = getMousePosition(event).y - (racketLeft.height / 2);
-
-        // ***
-        // Rackets collisions
-        // ***
-        //
-        // TODO:#: Code duplication here, remove it.
-        // * Left racket
-        // Racket top boundary
-        if (racketLeft.pos.y <= 0) {
-            racketLeft.pos.y = Racket.offset;
-        }
-
-        // Racket bottom boundary
-        if (racketLeft.pos.y >= (canvas.height - racketLeft.height)) {
-            racketLeft.pos.y = canvas.height - racketLeft.height - Racket.offset;
-        }
-
-        //* Right racket
-        // Racket top boundary
-        if (racketRight.pos.y <= 0) {
-            racketRight.pos.y = Racket.offset;
-        }
-
-        // Racket bottom boundary
-        if (racketRight.pos.y >= (canvas.height - racketRight.height)) {
-            racketRight.pos.y = canvas.height - racketRight.height - Racket.offset;
-        }
-        // #:/
+        racketLeft.moveToRelative(getMousePosition(event).y);
     });
 
     document.addEventListener('keydown', function(event) {

@@ -16,6 +16,19 @@ class Racket {
 
     moveToRelative(relativePosition) {
         this.pos.y = relativePosition - (this.height / 2);
+
+        // ***
+        // Racket collisions
+        // ***
+        // Top boundary
+        if (this.pos.y <= 0) {
+            this.pos.y = Racket.offset;
+        }
+
+        // Bottom boundary
+        if (this.pos.y >= (canvas.height - this.height)) {
+            this.pos.y = canvas.height - this.height - Racket.offset;
+        }
     }
 
     moveToOrig() {
