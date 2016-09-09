@@ -163,23 +163,23 @@ function update() {
     // * Left racket
     // Racket top boundary
     if (racketLeft.pos.y <= 0) {
-        racketLeft.pos.y = 5;
+        racketLeft.pos.y = Racket.offset;
     }
 
     // Racket bottom boundary
     if (racketLeft.pos.y >= (canvas.height - racketLeft.height)) {
-        racketLeft.pos.y = canvas.height - racketLeft.height - 5;
+        racketLeft.pos.y = canvas.height - racketLeft.height - Racket.offset;
     }
 
     //* Right racket
     // Racket top boundary
     if (racketRight.pos.y <= 0) {
-        racketRight.pos.y = 5;
+        racketRight.pos.y = Racket.offset;
     }
 
     // Racket bottom boundary
     if (racketRight.pos.y >= (canvas.height - racketRight.height)) {
-        racketRight.pos.y = canvas.height - racketRight.height - 5;
+        racketRight.pos.y = canvas.height - racketRight.height - Racket.offset;
     }
 
     // ***
