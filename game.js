@@ -1,5 +1,3 @@
-// TODO: Consider the possibility of adding bonuses to pick during game.
-
 const FPS = 60;
 const MS_PER_UPDATE = 1000 / FPS;
 
@@ -67,6 +65,8 @@ function drawStaticScreen(titleText, blinkText) {
 
     canvasContext.drawFillText(titleText.color, titleText.text, titleText.fontSize, titleText.fontFamily, titleText.pos.x, titleText.pos.y);
 
+    // TODO: Consider the use cases for stopping the blinking in the static screens.
+    //       If none are found, just remove 'blinking' for good.
     let blinking = true;
     let freq = 1000;
     if (!blinking || Math.floor(Date.now() / freq) % 2) {
