@@ -24,8 +24,8 @@ class Coord {
 
 let audioEffects = new Effects();
 
-let playerLeft = new Player("PlayerName");
-let playerRight = new Player("AI");
+let playerLeft = new Player('PlayerName');
+let playerRight = new Player('AI');
 
 let ball = new Ball('white', 10, randsign() * Ball.basehSpeed, randbound(-10, 10), new Coord(canvas.hCenter, canvas.vCenter));
 let racketLeft = new Racket('white', 15, 100, new Coord(Racket.offset, 50));
@@ -33,7 +33,7 @@ let racketRight = new Racket('white', 15, 100, new Coord(canvas.width - 15 - Rac
 
 let soundButton = new Button(20, 20, 2, new Coord(canvas.width - 20 - 50, 10));
 
-let pauseText = new Text("white", "PAUSE", 194, "Dimitri, sans-serif", new Coord());
+let pauseText = new Text('white', 'PAUSE', 194, 'Dimitri, sans-serif', new Coord());
 pauseText.pos.x = canvas.hCenter - (pauseText.width / 2);
 pauseText.pos.y = canvas.vCenter - (pauseText.fontSize / 2);
 
@@ -77,10 +77,12 @@ function drawStaticScreen(titleText, blinkText) {
 function render() {
     canvasContext.drawFillRect('black', canvas.width, canvas.height, 0, 0);
 
-    canvasContext.drawStrokeRect('white', soundButton.width, soundButton.height, soundButton.pos.x, soundButton.pos.y);
+    canvasContext.drawStrokeRect(
+        'white', soundButton.width, soundButton.height, soundButton.pos.x, soundButton.pos.y);
 
     if (soundButton.clicked) {
-        canvasContext.drawFillRect('white', soundButton.width, soundButton.height, soundButton.pos.x, soundButton.pos.y);
+        canvasContext.drawFillRect(
+            'white', soundButton.width, soundButton.height, soundButton.pos.x, soundButton.pos.y);
     }
 
     if (isSplashScreen) {
@@ -101,18 +103,24 @@ function render() {
     if (isPaused) {
         canvasContext.drawFillText(
             pauseText.color, pauseText.text, pauseText.fontSize, pauseText.fontFamily,
-            pauseText.pos.x, pauseText.pos.y);
+            pauseText.pos.x, pauseText.pos.y
+        );
 
         // return; // A return here would make everything else disappear when the game is paused.
     }
 
-    canvasContext.drawFillText("white", playerLeft.getScore(), 24, "sans-serif", canvas.width / 4, 50);
-    canvasContext.drawFillText("white", playerRight.getScore(), 24, "sans-serif", canvas.width - (canvas.width / 4), 50);
+    canvasContext.drawFillText(
+        'white', playerLeft.getScore(), 24, 'sans-serif', canvas.width / 4, 50);
+    canvasContext.drawFillText(
+        'white', playerRight.getScore(), 24, 'sans-serif', canvas.width - (canvas.width / 4), 50);
 
-    canvasContext.drawLine('white', 4, [40, 40], new Coord(canvas.width / 2, 0), new Coord(canvas.width / 2, canvas.height), 0);
+    canvasContext.drawLine(
+        'white', 4, [40, 40], new Coord(canvas.hCenter, 0), new Coord(canvas.hCenter, canvas.height), 0);
 
-    canvasContext.drawFillRect(racketLeft.color, racketLeft.width, racketLeft.height, racketLeft.pos.x, racketLeft.pos.y);
-    canvasContext.drawFillRect(racketRight.color, racketRight.width, racketRight.height, racketRight.pos.x, racketRight.pos.y);
+    canvasContext.drawFillRect(
+        racketLeft.color, racketLeft.width, racketLeft.height, racketLeft.pos.x, racketLeft.pos.y);
+    canvasContext.drawFillRect(
+        racketRight.color, racketRight.width, racketRight.height, racketRight.pos.x, racketRight.pos.y);
 
     canvasContext.drawCirc('white', ball.radius, ball.pos.x, ball.pos.y);
 }
@@ -160,7 +168,6 @@ function update() {
     // ***
     // Ball collisions
     // ***
-
     // TODO:#: Code duplication here, remove it.
     // Left boundary
     if ((ball.pos.x - ball.radius) <= Racket.offset) {
@@ -276,7 +283,7 @@ function game() {
             isPaused = !isPaused;
             audioEffects.effects.game_paused.play();
 
-            debug.print("'p'-key down: Game paused.");
+            debug.print('p-key down: Game paused.');
         }
 
         // Toggle mute

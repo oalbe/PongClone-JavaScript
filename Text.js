@@ -12,7 +12,7 @@ class Text {
 
     width_helper() {
         canvasContext.textBaseline = 'top';
-        canvasContext.font = this.fontSize + "px " + this.fontFamily;
+        canvasContext.font = this.fontSize + 'px ' + this.fontFamily;
 
         return canvasContext.measureText(this.text).width;
     }

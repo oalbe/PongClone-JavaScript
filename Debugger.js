@@ -15,7 +15,7 @@ class Debugger {
         if (this.isEnabled) {
             let res = value;
             if (content) {
-                res += ": " + content;
+                res += ': ' + content;
             }
 
             console.log(res);
