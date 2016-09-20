@@ -218,13 +218,14 @@ class Game {
     render() {
         this.canvasContext.drawFillRect('black', this.canvas.width, this.canvas.height, 0, 0);
 
-        this.canvasContext.drawStrokeRect(
-            'white', this.soundButton.width, this.soundButton.height, this.soundButton.pos.x, this.soundButton.pos.y);
+        let audioIcon = new Image();
+        audioIcon.src = 'images/audio_on.svg';
 
         if (this.soundButton.clicked) {
-            this.canvasContext.drawFillRect(
-                'white', this.soundButton.width, this.soundButton.height, this.soundButton.pos.x, this.soundButton.pos.y);
+            audioIcon.src = 'images/audio_off.svg';
         }
+
+        this.canvasContext.drawImage(audioIcon, this.soundButton.pos.x, this.soundButton.pos.y);
 
         if (this.isSplashScreen) {
             this.drawStaticScreen(this.splashScreenTitle, this.splashScreenBlink);
