@@ -9,6 +9,7 @@ class Game {
         this.isSplashScreen = true;
         this.isLoseScreen = false;
         this.isWinScreen = false;
+        this.isDifficultyMenu = false;
 
         this.canvas = canvas;
         this.canvasContext = canvasContext;
@@ -46,6 +47,25 @@ class Game {
         this.loseWinScreenBlink = new Text('white', 'Press SPACE to restart', 30, 'Dimitri, sans-serif', new Coord());
         this.loseWinScreenBlink.pos.x = this.canvas.hCenter - (this.loseWinScreenBlink.width / 2);
         this.loseWinScreenBlink.pos.y = (this.canvas.vCenter * 1.3) - (this.loseWinScreenBlink.fontSize / 2);
+
+        this.easyDiffButton = new TextButton(200, 60, new Coord(this.canvas.hCenter - 100, this.canvas.vCenter - 120), 2);
+        this.easyDiffText = new Text('white', 'Easy', 45, 'Dimitri, sans-serif', new Coord());
+        this.easyDiffText.pos.x = this.canvas.hCenter - (this.easyDiffText.width / 2);
+        this.easyDiffText.pos.y = this.canvas.vCenter - (this.easyDiffText.fontSize / 2) - 90;
+
+        this.mediumDiffButton = new TextButton(200, 60, new Coord(this.canvas.hCenter - 100, this.canvas.vCenter - 30), 2);
+        this.mediumDiffText = new Text('white', 'Medium', 45, 'Dimitri, sans-serif', new Coord());
+        this.mediumDiffText.pos.x = this.canvas.hCenter - (this.mediumDiffText.width / 2);
+        this.mediumDiffText.pos.y = this.canvas.vCenter - (this.mediumDiffText.fontSize / 2);
+
+        this.hardDiffButton = new TextButton(200, 60, new Coord(this.canvas.hCenter - 100, this.canvas.vCenter + 60), 2);
+        this.hardDiffText = new Text('white', 'Hard', 45, 'Dimitri, sans-serif', new Coord());
+        this.hardDiffText.pos.x = this.canvas.hCenter - (this.hardDiffText.width / 2);
+        this.hardDiffText.pos.y = this.canvas.vCenter - (this.hardDiffText.fontSize / 2) + 90;
+
+        this.titleDiffText = new Text('white', 'Options', 85, 'Dimitri, sans-serif', new Coord());
+        this.titleDiffText.pos.x = this.canvas.hCenter - (this.titleDiffText.width / 2);
+        this.titleDiffText.pos.y = this.canvas.vCenter - (this.titleDiffText.fontSize / 2) - 190;
     }
 
     isPaused() {
@@ -89,8 +109,24 @@ class Game {
         }
     }
 
+    menu() {
+        this.canvasContext.drawFillRect('black', this.canvas.width, this.canvas.height, 0, 0);
+
+        this.canvasContext.drawFillText(this.titleDiffText.color, this.titleDiffText.text, this.titleDiffText.fontSize, this.titleDiffText.fontFamily, this.titleDiffText.pos.x, this.titleDiffText.pos.y);
+
+        this.canvasContext.drawStrokeRect('white', this.easyDiffButton.width, this.easyDiffButton.height, this.easyDiffButton.pos.x, this.easyDiffButton.pos.y, this.easyDiffButton.borderWidth);
+        this.canvasContext.drawFillText(this.easyDiffText.color, this.easyDiffText.text, this.easyDiffText.fontSize, this.easyDiffText.fontFamily, this.easyDiffText.pos.x, this.easyDiffText.pos.y);
+
+        this.canvasContext.drawStrokeRect('white', this.mediumDiffButton.width, this.mediumDiffButton.height, this.mediumDiffButton.pos.x, this.mediumDiffButton.pos.y, this.mediumDiffButton.borderWidth);
+        this.canvasContext.drawFillText(this.mediumDiffText.color, this.mediumDiffText.text, this.mediumDiffText.fontSize, this.mediumDiffText.fontFamily, this.mediumDiffText.pos.x, this.mediumDiffText.pos.y);
+
+        this.canvasContext.drawStrokeRect('white', this.hardDiffButton.width, this.hardDiffButton.height, this.hardDiffButton.pos.x, this.hardDiffButton.pos.y, this.hardDiffButton.borderWidth);
+        this.canvasContext.drawFillText(this.hardDiffText.color, this.hardDiffText.text, this.hardDiffText.fontSize, this.hardDiffText.fontFamily, this.hardDiffText.pos.x, this.hardDiffText.pos.y);
+    }
+
     update() {
         if (this.isSplashScreen) return;
+        if (this.isDifficultyMenu) return;
         if (this.isPaused()) return;
         if (this.isLoseScreen) return;
         if (this.isWinScreen) return;
@@ -222,6 +258,12 @@ class Game {
 
         if (this.isSplashScreen) {
             this.drawStaticScreen(this.splashScreenTitle, this.splashScreenBlink);
+            return;
+        }
+
+        if (this.isDifficultyMenu) {
+            // Draw difficulty menu here
+            this.menu();
             return;
         }
 

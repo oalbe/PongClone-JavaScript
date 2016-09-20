@@ -19,6 +19,21 @@ pong.canvas.addEventListener('mousemove', function(event) {
     if (pong.isPaused()) return;
 
     pong.racketLeft.moveToRelative(getMousePosition(event).y);
+
+    if (pong.isDifficultyMenu) {
+        if (pong.easyDiffButton.isHovered(getMousePosition(event))) {
+            console.log('easy!');
+            pong.easyDiffButton.bubble();
+        }
+
+        if (pong.mediumDiffButton.isHovered(getMousePosition(event))) {
+            console.log('medium!');
+        }
+
+        if (pong.hardDiffButton.isHovered(getMousePosition(event))) {
+            console.log('hard!');
+        }
+    }
 });
 
 document.addEventListener('keydown', function(event) {
@@ -41,6 +56,7 @@ document.addEventListener('keydown', function(event) {
     if (event.key === ' ') {
         if (pong.isSplashScreen) {
             pong.isSplashScreen = false;
+            pong.isDifficultyMenu = true;
         }
 
         if (pong.isLoseScreen || pong.isWinScreen) {
@@ -55,14 +71,9 @@ document.addEventListener('keydown', function(event) {
 pong.canvas.addEventListener('click', function(event) {
     let mousePos = getMousePosition(event);
 
-    // Check if the click happened inside the boundaries of the button.
-    if ((mousePos.x >= pong.soundButton.pos.x) &&
-        (mousePos.x <= (pong.soundButton.pos.x + pong.soundButton.width))) {
-        if ((mousePos.y >= pong.soundButton.pos.y) &&
-            (mousePos.y <= (pong.soundButton.pos.y + pong.soundButton.height))) {
-            pong.soundButton.click();
-            pong.audioEffects.toggleMuteAll();
-        }
+    if (pong.soundButton.isHovered(mousePos)) {
+        pong.soundButton.click();
+        pong.audioEffects.toggleMuteAll();
     }
 });
 
