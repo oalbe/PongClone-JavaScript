@@ -4,10 +4,11 @@ class Game {
         this._MS_PER_UPDATE = 1000 / this._FPS;
         this._lag = 0;
 
+        this._isPaused = false;
+
         this.isSplashScreen = true;
         this.isLoseScreen = false;
         this.isWinScreen = false;
-        this.isPaused = false;
 
         this.canvas = canvas;
         this.canvasContext = canvasContext;
@@ -47,6 +48,14 @@ class Game {
         this.loseWinScreenBlink.pos.y = (this.canvas.vCenter * 1.3) - (this.loseWinScreenBlink.fontSize / 2);
     }
 
+    isPaused() {
+        return this._isPaused;
+    }
+
+    togglePause() {
+        this._isPaused = !this._isPaused;
+    }
+
     loop(previous) {
         let current = Date.now();
         let elapsed = current - previous;
@@ -82,7 +91,7 @@ class Game {
 
     update() {
         if (this.isSplashScreen) return;
-        if (this.isPaused) return;
+        if (this.isPaused()) return;
         if (this.isLoseScreen) return;
         if (this.isWinScreen) return;
 
@@ -232,7 +241,7 @@ class Game {
             return;
         }
 
-        if (this.isPaused) {
+        if (this.isPaused()) {
             this.canvasContext.drawFillText(
                 this.pauseText.color, this.pauseText.text, this.pauseText.fontSize, this.pauseText.fontFamily,
                 this.pauseText.pos.x, this.pauseText.pos.y

@@ -16,7 +16,7 @@ canvas.vCenter = canvas.height / 2;
 let pong = new Game(canvas, canvasContext);
 
 pong.canvas.addEventListener('mousemove', function(event) {
-    if (pong.isPaused) return;
+    if (pong.isPaused()) return;
 
     pong.racketLeft.moveToRelative(getMousePosition(event).y);
 });
@@ -24,7 +24,8 @@ pong.canvas.addEventListener('mousemove', function(event) {
 document.addEventListener('keydown', function(event) {
     // Toggle pause
     if (event.key === 'p') {
-        pong.isPaused = !pong.isPaused;
+        // pong.isPaused = !pong.isPaused;
+        pong.togglePause();
         pong.audioEffects.effects.game_paused.play();
 
         console.log('p-key down: Game paused.');
