@@ -166,21 +166,14 @@ class Game {
         }
         // #:/
 
-        // TODO:#: Code duplication here, remove it.
         // Top boundary
-        if ((this.ball.pos.y - this.ball.radius) <= Racket.offset) {
+        if (((this.ball.pos.y - this.ball.radius) <= Racket.offset) ||
+          // Bottom boundary
+          ((this.ball.pos.y + this.ball.radius) >= (this.canvas.height - Racket.offset))) {
             this.audioEffects.effects.ball_bounce.play();
 
             this.ball.vSpeed = -this.ball.vSpeed;
         }
-
-        // Bottom boundary
-        if ((this.ball.pos.y + this.ball.radius) >= (this.canvas.height - Racket.offset)) {
-            this.audioEffects.effects.ball_bounce.play();
-
-            this.ball.vSpeed = -this.ball.vSpeed;
-        }
-        // #:/
 
         // TODO:#: Code duplication here, remove it.
         //* Hit the left racket
@@ -238,7 +231,7 @@ class Game {
         }
 
         if (this.isWinScreen) {
-            this.drawStaticScreen(this.winScreenTitle, loseWinScreenBlink);
+            this.drawStaticScreen(this.winScreenTitle, this.loseWinScreenBlink);
             return;
         }
 
