@@ -1,5 +1,7 @@
 .jshintrc
 TODO.md
+*.sublime-project
+*.sublime-workspace
 # Created by https://www.gitignore.io/api/node,windows
 
 ### Node ###
