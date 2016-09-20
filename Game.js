@@ -48,12 +48,12 @@ class Game {
     }
 
     loop(previous) {
-        requestAnimationFrame(this.loop.bind(this, previous));
-
         let current = Date.now();
         let elapsed = current - previous;
         previous = current;
         this._lag += elapsed;
+
+        requestAnimationFrame(this.loop.bind(this, previous));
 
         // Process input here
 
