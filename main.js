@@ -277,7 +277,7 @@ canvas.vCenter = canvas.height / 2;
 
 let pong = new Game(canvas, canvasContext);
 
-(function() {
+// (function() {
     pong.canvas.addEventListener('mousemove', function(event) {
         if (pong.isPaused) return;
 
@@ -329,4 +329,4 @@ let pong = new Game(canvas, canvasContext);
     });
 
     pong.loop(prev);
-})();
+// })();
