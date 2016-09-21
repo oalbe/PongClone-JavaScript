@@ -23,7 +23,7 @@ class Game {
         this.audioEffects = new Effects();
         this.playerLeft = new Player('PlayerName');
         this.playerRight = new Player('AI');
-        this.ball = new Ball('white', 10, randsign() * Ball.basehSpeed, randbound(-10, 10), new Coord(this.canvas.hCenter, this.canvas.vCenter));
+        this.ball = new Ball('white', 10, new Coord(this.canvas.hCenter, this.canvas.vCenter), randsign() * Ball.basehSpeed, randbound(-10, 10));
 
         this.racketLeft = new Racket('white', 15, 100, new Coord(Racket.offset, 50));
         this.racketRight = new Racket('white', 15, 100, new Coord(this.canvas.width - 15 - Racket.offset, 50), this._difficultyLevels[this._difficulty]);
@@ -83,7 +83,11 @@ class Game {
     }
 
     togglePause() {
-        this._isPaused = !this._isPaused;
+        this._isPaused = !this.isPaused();
+    }
+
+    pause() {
+        this._isPaused = true;
     }
 
     loop(previous) {
@@ -147,7 +151,7 @@ class Game {
         // AI for the enemy racket.
         if (this.ball.pos.x < this.canvas.hCenter) {
             if (this.racketRight.center().y < this.canvas.vCenter) {
-                if (((this.canvas.height / 2) - this.racketRight.center().y) > this.racketRight.speed) {
+                if (((this.canvas.vCenter) - this.racketRight.center().y) > this.racketRight.speed) {
                     this.racketRight.pos.y += this.racketRight.speed;
                 } else {
                     this.racketRight.moveToOrig();
@@ -259,7 +263,6 @@ class Game {
 
         let audioIcon = new Image();
         audioIcon.src = 'images/audio_on.svg';
-
         if (this.soundButton.clicked) {
             audioIcon.src = 'images/audio_off.svg';
         }

@@ -1,6 +1,6 @@
 // TODO: Consider defaulting both the speeds and the position
 class Ball {
-    constructor(color, radius, hSpeed, vSpeed, position) {
+    constructor(color, radius, position, hSpeed, vSpeed) {
         this.color = color;
         this.radius = radius;
         this.hSpeed = hSpeed;

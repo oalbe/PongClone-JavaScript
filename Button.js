@@ -13,7 +13,6 @@ class Button {
     }
 
     isHovered(mousePos) {
-        // Check if the click happened inside the boundaries of the button.
         if ((mousePos.x >= this.pos.x) &&
             (mousePos.x <= (this.pos.x + this.width))) {
             if ((mousePos.y >= this.pos.y) &&
