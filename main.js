@@ -41,13 +41,15 @@ document.addEventListener('keydown', function(event) {
         pong.togglePause();
         pong.audioEffects.effects.game_paused.play();
 
-        console.log('p-key down: Game paused.');
+        return;
     }
 
     // Toggle mute
     if (event.key === 'm') {
         pong.soundButton.click();
         pong.audioEffects.toggleMuteAll();
+
+        return;
     }
 
     // Space pressed
@@ -55,6 +57,8 @@ document.addEventListener('keydown', function(event) {
         if (pong.isSplashScreen) {
             pong.isSplashScreen = false;
             pong.isDifficultyMenu = true;
+
+            return;
         }
 
         if (pong.isLoseScreen || pong.isWinScreen) {
@@ -63,6 +67,8 @@ document.addEventListener('keydown', function(event) {
             pong.ball.restart();
             pong.playerRight.setScore(0);
             pong.playerLeft.setScore(0);
+
+            return;
         }
     }
 });
@@ -82,21 +88,17 @@ pong.canvas.addEventListener('click', function(event) {
             pong.isDifficultyMenu = false;
             pong.easyDiffButton.click();
             pong.setDifficulty('EASY');
-        }
-
-        if (pong.mediumDiffButton.isHovered(mousePos)) {
+        } else if (pong.mediumDiffButton.isHovered(mousePos)) {
             pong.isDifficultyMenu = false;
             pong.mediumDiffButton.click();
             pong.setDifficulty('MEDIUM');
-        }
-
-        if (pong.hardDiffButton.isHovered(mousePos)) {
+        } else if (pong.hardDiffButton.isHovered(mousePos)) {
             pong.isDifficultyMenu = false;
             pong.hardDiffButton.click();
             pong.setDifficulty('HARD');
         }
 
-        // Set the chosen difficulty
+        // Actually set the chosen difficulty
         pong.racketRight.speed = pong._difficultyLevels[pong._difficulty];
 
         return;
