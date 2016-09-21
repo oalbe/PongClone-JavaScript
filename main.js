@@ -21,17 +21,15 @@ pong.canvas.addEventListener('mousemove', function(event) {
     pong.racketLeft.moveToRelative(getMousePosition(event).y);
 
     if (pong.isDifficultyMenu) {
+        // TODO: Do hovering animations here
         if (pong.easyDiffButton.isHovered(getMousePosition(event))) {
-            console.log('easy!');
-            pong.easyDiffButton.bubble();
+            // pong.easyDiffButton.bubble();
         }
 
         if (pong.mediumDiffButton.isHovered(getMousePosition(event))) {
-            console.log('medium!');
         }
 
         if (pong.hardDiffButton.isHovered(getMousePosition(event))) {
-            console.log('hard!');
         }
     }
 });
@@ -61,6 +59,7 @@ document.addEventListener('keydown', function(event) {
 
         if (pong.isLoseScreen || pong.isWinScreen) {
             pong.isLoseScreen = pong.isWinScreen = false;
+            pong.isDifficultyMenu = true;
             pong.ball.restart();
             pong.playerRight.setScore(0);
             pong.playerLeft.setScore(0);
@@ -74,6 +73,33 @@ pong.canvas.addEventListener('click', function(event) {
     if (pong.soundButton.isHovered(mousePos)) {
         pong.soundButton.click();
         pong.audioEffects.toggleMuteAll();
+
+        return;
+    }
+
+    if (pong.isDifficultyMenu) {
+        if (pong.easyDiffButton.isHovered(mousePos)) {
+            pong.isDifficultyMenu = false;
+            pong.easyDiffButton.click();
+            pong.setDifficulty('EASY');
+        }
+
+        if (pong.mediumDiffButton.isHovered(mousePos)) {
+            pong.isDifficultyMenu = false;
+            pong.mediumDiffButton.click();
+            pong.setDifficulty('MEDIUM');
+        }
+
+        if (pong.hardDiffButton.isHovered(mousePos)) {
+            pong.isDifficultyMenu = false;
+            pong.hardDiffButton.click();
+            pong.setDifficulty('HARD');
+        }
+
+        // Set the chosen difficulty
+        pong.racketRight.speed = pong._difficultyLevels[pong._difficulty];
+
+        return;
     }
 });
 

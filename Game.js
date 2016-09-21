@@ -5,6 +5,12 @@ class Game {
         this._lag = 0;
 
         this._isPaused = false;
+        this._difficulty = 'MEDIUM';
+        this._difficultyLevels = {
+            'EASY': 5,
+            'MEDIUM': 10,
+            'HARD': 20
+        };
 
         this.isSplashScreen = true;
         this.isLoseScreen = false;
@@ -20,7 +26,7 @@ class Game {
         this.ball = new Ball('white', 10, randsign() * Ball.basehSpeed, randbound(-10, 10), new Coord(this.canvas.hCenter, this.canvas.vCenter));
 
         this.racketLeft = new Racket('white', 15, 100, new Coord(Racket.offset, 50));
-        this.racketRight = new Racket('white', 15, 100, new Coord(this.canvas.width - 15 - Racket.offset, 50));
+        this.racketRight = new Racket('white', 15, 100, new Coord(this.canvas.width - 15 - Racket.offset, 50), this._difficultyLevels[this._difficulty]);
 
         this.soundButton = new Button(20, 20, 2, new Coord(this.canvas.width - 20 - 50, 10));
 
@@ -66,6 +72,10 @@ class Game {
         this.titleDiffText = new Text('white', 'Options', 85, 'Dimitri, sans-serif', new Coord());
         this.titleDiffText.pos.x = this.canvas.hCenter - (this.titleDiffText.width / 2);
         this.titleDiffText.pos.y = this.canvas.vCenter - (this.titleDiffText.fontSize / 2) - 190;
+    }
+
+    setDifficulty(difficulty) {
+        this._difficulty = difficulty;
     }
 
     isPaused() {
